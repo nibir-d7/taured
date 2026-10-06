@@ -10,14 +10,15 @@ param (
     [string]$Config,
     [ValidateSet("Standard", "Minimal", "Advanced", "")]
     [string]$Preset,
-    [switch]$Offline
+    [switch]$Offline,
+    [switch]$SelfTest
 )
 
 $TAURED_RELEASE_URL = "https://github.com/nibir-d7/taured/releases/latest/download/taured.ps1"
 $TAURED_RAW_URL = "https://raw.githubusercontent.com/nibir-d7/taured/master/cli/taured-win/taured.ps1"
 
 $tauredSourceText = if ($PSCommandPath) { Get-Content $PSCommandPath -Raw } else { $MyInvocation.MyCommand.Definition }
-$tauredCompiledMarker = ('function Initialize-' + 'WPFUI')
+$tauredCompiledMarker = ('function New-taured' + 'Interface')
 $tauredIsCompiled = $tauredSourceText -match $tauredCompiledMarker
 
 if (-not $tauredIsCompiled) {
@@ -43,6 +44,7 @@ if (-not $tauredIsCompiled) {
     if ($Config) { $tauredArgs["Config"] = $Config }
     if ($Preset) { $tauredArgs["Preset"] = $Preset }
     if ($Offline) { $tauredArgs["Offline"] = $true }
+    if ($SelfTest) { $tauredArgs["SelfTest"] = $true }
     & $tauredBlock @tauredArgs
     return
 }
@@ -219,7 +221,7 @@ if (`$launch.ScriptPath) {
     return [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($bootstrap))
 }
 
-if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+if (!($SelfTest) -and !([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Write-Output "taured needs to be run as Administrator. Attempting to relaunch."
     $elevationParameters = @{}
     foreach ($parameter in $PSBoundParameters.GetEnumerator()) {
@@ -231,6 +233,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     }
 
     $powershellCmd = if (Get-Command pwsh -ErrorAction SilentlyContinue) { "pwsh" } else { "powershell" }
+    $powershellStaArgs = if ($powershellCmd -eq "pwsh") { @("-STA") } else { @() }
 
     # A headless caller is waiting on this process for an outcome, so the elevated run has to be
     # waited on and its code handed back. A terminal tab is skipped for the same reason: the
@@ -240,7 +243,7 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
         # waiting on this process would read that as a successful run
         try {
             $elevationCommand = New-tauredElevationCommand -ScriptPath $PSCommandPath -Parameters $elevationParameters -Headless
-            $elevated = Start-Process $powershellCmd -ArgumentList @("-ExecutionPolicy", "Bypass", "-NoProfile", "-EncodedCommand", $elevationCommand) -Verb RunAs -Wait -PassThru -ErrorAction Stop
+            $elevated = Start-Process $powershellCmd -ArgumentList ($powershellStaArgs + @("-ExecutionPolicy", "Bypass", "-NoProfile", "-EncodedCommand", $elevationCommand)) -Verb RunAs -Wait -PassThru -ErrorAction Stop
         } catch {
             Write-Host "Elevation was declined or failed: $($_.Exception.Message)" -ForegroundColor Red
             Write-Host "taured needs an Administrator PowerShell window." -ForegroundColor Yellow
@@ -260,9 +263,9 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
     $elevationCommand = New-tauredElevationCommand -ScriptPath $PSCommandPath -Parameters $elevationParameters
 
     if ($processCmd -eq "wt.exe") {
-        Start-Process $processCmd -ArgumentList "$powershellCmd -ExecutionPolicy Bypass -NoProfile -EncodedCommand $elevationCommand" -Verb RunAs
+        Start-Process $processCmd -ArgumentList "$powershellCmd $($powershellStaArgs -join ' ') -ExecutionPolicy Bypass -NoProfile -EncodedCommand $elevationCommand" -Verb RunAs
     } else {
-        Start-Process $processCmd -ArgumentList @("-ExecutionPolicy", "Bypass", "-NoProfile", "-EncodedCommand", $elevationCommand) -Verb RunAs
+        Start-Process $processCmd -ArgumentList ($powershellStaArgs + @("-ExecutionPolicy", "Bypass", "-NoProfile", "-EncodedCommand", $elevationCommand)) -Verb RunAs
     }
 
     break
