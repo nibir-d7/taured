@@ -1,67 +1,34 @@
 import Link from "next/link";
-import { Laptop, Wrench, Images } from "@phosphor-icons/react/dist/ssr";
-import { DetectedOs } from "@/components/detected-os";
+import { ArrowUpRight, DesktopTower, SlidersHorizontal, SquaresFour } from "@phosphor-icons/react/dist/ssr";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "taured.space",
+  url: "https://taured.space",
+  description: "Free, safe, open system utilities: app installer, system tweaker, CC0 wallpapers.",
+};
 
 export default function Home() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "taured.space",
-    url: "https://taured.space",
-    description: "Free, safe, open system utilities: app installer, system tweaker, CC0 wallpapers.",
-  };
   return (
-    <div className="mx-auto flex max-w-5xl flex-col items-center gap-12 px-4 py-16 text-center">
+    <div className="home-stack">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-
-      <section className="flex flex-col items-center gap-4">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/taured-logo.png" alt="taured" width={72} height={72} className="h-16 w-16 sm:h-20 sm:w-20" />
-        <h1 className="text-4xl font-bold tracking-tight md:text-5xl">What do you want to do?</h1>
-        <p className="text-sm text-muted-foreground">
-          Free · No login · Open source · <DetectedOs />
-        </p>
+      <section className="home-section home-tools-focus">
+        <div className="section-head">
+          <div><span className="eyebrow">Choose your starting point</span><h2>What do you want to do?</h2></div>
+          <a className="text-link" href="https://www.patreon.com/nibirbiswas" target="_blank" rel="noreferrer">Support a solo dev ↗</a>
+        </div>
+        <div className="tool-grid">
+          <ToolTile number="01 / SETUP" icon={<DesktopTower size={116} weight="thin" />} href="/apps" title="The app setup" body="Build your own app bundle. Pick what you need and get a ready-to-run installer script for your system." cta="Choose your apps" />
+          <ToolTile number="02 / TUNE" icon={<SlidersHorizontal size={100} weight="thin" />} href="/tweaks" title="The system tune-up" body="Browse practical, reversible tweaks, then jump into the Windows or Linux toolbox." cta="Tune your system" />
+          <ToolTile number="03 / MAKE IT YOURS" icon={<SquaresFour size={105} weight="thin" />} href="/wallpapers" title="A new point of view" body="Find a little more atmosphere for your desktop. Browse curated wallpaper collections." cta="Find a wallpaper" />
+        </div>
       </section>
-
-      <section className="grid w-full gap-5 md:grid-cols-3">
-        <ToolCard
-          href="/apps"
-          tint="bg-[#fdf3c9] dark:bg-[#3d3a26]"
-          icon={<Laptop size={34} weight="duotone" />}
-          title="1. Software Setup"
-          body="Pick apps, download one .exe/.sh that auto-installs everything like Ninite. Cross-platform."
-          cta="Start Setup →"
-        />
-        <ToolCard
-          href="/tweaks"
-          tint="bg-[#dbe9fd] dark:bg-[#26334a]"
-          icon={<Wrench size={34} weight="duotone" />}
-          title="2. Tweak your OS"
-          body="One CLI command. Safe, reversible. Debloat, privacy, performance."
-          cta="Show Command →"
-        />
-        <ToolCard
-          href="/wallpapers"
-          tint="bg-[#fbdcf0] dark:bg-[#3f2737]"
-          icon={<Images size={34} weight="duotone" />}
-          title="3. Download Wallpapers"
-          body="Curated 4K CC0 packs. Single or full ZIP download."
-          cta="Browse Packs →"
-        />
-      </section>
+      <div className="home-ribbon"><span>Open source by design</span><span>Readable scripts</span><span>No login required</span><span>Built for Windows + Linux</span></div>
     </div>
   );
 }
 
-function ToolCard({ href, tint, icon, title, body, cta }: { href: string; tint: string; icon: React.ReactNode; title: string; body: string; cta: string }) {
-  return (
-    <div className={`flex flex-col items-center gap-4 rounded-3xl p-8 text-center shadow-sm ${tint}`}>
-      <span className="text-foreground/80">{icon}</span>
-      <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-      <p className="text-sm leading-relaxed text-foreground/70">{body}</p>
-      <Link href={href} className="mt-2 inline-flex h-10 items-center rounded-full bg-neutral-900 px-6 text-sm font-medium text-white transition hover:bg-neutral-700 active:scale-[0.97] dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-300">
-        {cta}
-      </Link>
-    </div>
-  );
+function ToolTile({ number, icon, href, title, body, cta }: { number: string; icon: React.ReactNode; href: string; title: string; body: string; cta: string }) {
+  return <Link className="tool-tile" href={href}><div className="tile-top"><span>{number}</span><ArrowUpRight size={17} /></div><span className="tile-symbol" aria-hidden="true">{icon}</span><div className="tile-copy"><h3>{title}</h3><p>{body}</p><span className="tile-link">{cta}<span>→</span></span></div></Link>;
 }

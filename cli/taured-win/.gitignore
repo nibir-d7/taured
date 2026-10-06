@@ -1,9 +1,8 @@
 # taured
-System.Management.Automation.dll
-Microsoft.PowerShell.ConsoleHost.dll
 taured.exe.config
 binary/
 testResults.xml
+taured.ps1
 
 desktop.ini
 .DS_Store

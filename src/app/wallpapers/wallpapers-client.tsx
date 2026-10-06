@@ -1,117 +1,63 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import { ArrowDown, ArrowLeft, ArrowUpRight, DownloadSimple, X } from "@phosphor-icons/react";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import type { Pack } from "@/lib/types";
-import { Button } from "@/components/ui/button";
-import { Heart, X, Image as ImageIcon } from "@phosphor-icons/react";
 
-const FILTERS = ["All", "Nature", "Abstract", "Minimal", "Geometric", "Dark", "Pastel"];
+const CATEGORIES = [
+  { name: "Minimal", number: "01", art: "radial-gradient(ellipse at 72% 26%, #e2edb0 0 9%, transparent 9.5%), radial-gradient(ellipse at 50% 100%, #748b69 0 35%, transparent 35.5%), linear-gradient(145deg,#bdcbb0,#586e5b)" },
+  { name: "Landscape", number: "02", art: "linear-gradient(160deg,transparent 0 52%,#48634d 52.5%),linear-gradient(145deg,transparent 0 38%,#829272 38.5%),linear-gradient(#a4b9b2,#e4c99c)" },
+  { name: "Sci-fi", number: "03", art: "radial-gradient(circle at 71% 27%,#f8cc8d 0 4%,transparent 4.5%),linear-gradient(135deg,transparent 0 47%,#334953 47.5%),linear-gradient(25deg,#18292e,#798a86 70%,#d7bd98)" },
+  { name: "Anime", number: "04", art: "radial-gradient(circle at 66% 25%,#fff0c4 0 12%,transparent 12.5%),linear-gradient(155deg,transparent 0 47%,#727f85 47.5%),linear-gradient(#db9e91,#d8d2b8 70%,#8f9a83)" },
+];
+const CATEGORY_TAGS: Record<string, string[]> = { Minimal: ["minimal"], Landscape: ["landscape", "nature"], "Sci-fi": ["sci-fi", "sci fi", "scifi", "space"], Anime: ["anime"] };
 type Wallpaper = { id: string; image_url: string };
+const patreon = "https://www.patreon.com/nibirbiswas";
 
 export default function WallpapersClient() {
   const [packs, setPacks] = useState<Pack[]>([]);
   const [packsLoading, setPacksLoading] = useState(supabaseConfigured);
-  const [filter, setFilter] = useState("All");
-  const [favs, setFavs] = useState<Set<string>>(new Set());
+  const [category, setCategory] = useState("All");
   const [selected, setSelected] = useState<Pack | null>(null);
   const [images, setImages] = useState<Wallpaper[]>([]);
+  const [imagesLoading, setImagesLoading] = useState(false);
 
   useEffect(() => {
     if (!supabaseConfigured) return;
-    supabase.from("packs").select("*").order("created_at", { ascending: false }).then(({ data }) => { setPacks(data ?? []); setPacksLoading(false); });
+    let cancelled = false;
+    void Promise.resolve(supabase.from("packs").select("*").order("created_at", { ascending: false }).then(({ data }) => { if (!cancelled) { setPacks(data ?? []); setPacksLoading(false); } })).catch(() => { if (!cancelled) setPacksLoading(false); });
+    return () => { cancelled = true; };
   }, []);
-
   useEffect(() => {
     if (!selected) return;
-    supabase.from("wallpapers").select("id, image_url").eq("pack_id", selected.id).then(({ data }) => setImages(data ?? []));
+    let cancelled = false;
+    void Promise.resolve(supabase.from("wallpapers").select("id, image_url").eq("pack_id", selected.id).then(({ data }) => { if (!cancelled) { setImages(data ?? []); setImagesLoading(false); } })).catch(() => { if (!cancelled) setImagesLoading(false); });
+    return () => { cancelled = true; };
   }, [selected]);
+  const shown = useMemo(() => category === "All" ? packs : packs.filter((pack) => {
+    const terms = CATEGORY_TAGS[category] ?? [category.toLowerCase()];
+    return pack.tags?.some((tag) => terms.includes(tag.toLowerCase())) || terms.some((term) => pack.name.toLowerCase().includes(term));
+  }), [packs, category]);
 
-  const shown = useMemo(
-    () => (filter === "All" ? packs : packs.filter((p) => p.tags?.some((t) => t.toLowerCase() === filter.toLowerCase()) || p.name.toLowerCase().includes(filter.toLowerCase()))),
-    [packs, filter]
-  );
-
-  return (
-    <div className="mx-auto flex max-w-5xl flex-col items-center gap-8 px-4 py-14">
-      <section className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-4xl font-bold tracking-tight">Wallpaper Packs</h1>
-        <p className="text-sm text-muted-foreground">4K · CC0 · One-click</p>
-      </section>
-
-      <div className="flex flex-wrap justify-center gap-2">
-        {FILTERS.map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className={`rounded-full border px-4 py-1.5 text-sm transition ${filter === f ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900" : "bg-white hover:bg-accent dark:bg-neutral-900"}`}
-          >
-            {f}
-          </button>
-        ))}
-      </div>
-
-      {!packsLoading && packs.length === 0 && (
-        <div className="flex w-full max-w-xl flex-col items-center gap-3 rounded-3xl border bg-white p-10 text-center shadow-sm dark:bg-neutral-900">
-          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#fbdcf0] text-rose-500 dark:bg-[#3f2737]">
-            <ImageIcon size={26} weight="duotone" />
-          </span>
-          <h2 className="text-lg font-semibold">Packs are being prepared</h2>
-          <p className="max-w-sm text-sm text-muted-foreground">
-            Every pack is CC0 and hand-curated. New collections appear here as soon as they are rendered and uploaded.
-          </p>
-        </div>
-      )}
-
-      <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-4">
-        {shown.map((pack) => (
-          <div key={pack.id} className="group relative overflow-hidden rounded-2xl border bg-white text-left shadow-sm transition hover:shadow-md dark:bg-neutral-900">
-            <button onClick={() => setSelected(pack)} className="block w-full text-left">
-              {pack.cover_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={pack.cover_url} alt={pack.name} loading="lazy" className="aspect-[4/3] w-full object-cover" />
-              ) : (
-                <div className="aspect-[4/3] w-full bg-gradient-to-br from-amber-100 to-rose-100" />
-              )}
-              <div className="p-3">
-                <h2 className="text-sm font-semibold">{pack.name}</h2>
-                <p className="text-xs text-muted-foreground">{pack.resolution} · {pack.count} wallpapers</p>
-              </div>
-            </button>
-            <button
-              aria-label="favorite"
-              onClick={() => setFavs((s) => { const n = new Set(s); if (n.has(pack.id)) n.delete(pack.id); else n.add(pack.id); return n; })}
-              className="absolute right-2 top-2 rounded-full bg-white/80 p-1.5 backdrop-blur transition hover:bg-white"
-            >
-              <Heart size={16} weight={favs.has(pack.id) ? "fill" : "regular"} className={favs.has(pack.id) ? "text-rose-500" : "text-neutral-500"} />
-            </button>
-          </div>
-        ))}
-      </div>
-
-      {selected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm" onClick={() => setSelected(null)}>
-          <div className="w-full max-w-2xl rounded-3xl bg-white p-6 shadow-xl dark:bg-neutral-900" onClick={(e) => e.stopPropagation()}>
-            <div className="flex items-start justify-between">
-              <h2 className="text-xl font-semibold tracking-tight">{selected.name} Pack · Preview</h2>
-              <button onClick={() => setSelected(null)} className="rounded-full p-1 hover:bg-accent"><X size={18} /></button>
-            </div>
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              {images.slice(0, 6).map((w) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img key={w.id} src={w.image_url} alt="" loading="lazy" className="aspect-square w-full rounded-xl object-cover" />
-              ))}
-              {images.length === 0 && <p className="col-span-3 text-sm text-muted-foreground">No previews uploaded yet.</p>}
-            </div>
-            <a href={selected.zip_url ?? "#"} download className="mt-5 block">
-              <Button className="h-12 w-full rounded-full bg-neutral-900 text-base text-white hover:bg-neutral-700 dark:bg-neutral-100 dark:text-neutral-900">
-                Download Full Pack ZIP{selected.count ? ` — ${selected.count * 12} MB` : ""}
-              </Button>
-            </a>
-            <p className="mt-2 text-center text-xs text-muted-foreground">Includes {selected.count} images · {selected.license} license · ZIP</p>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  return <div className="page-shell">
+    <header className="page-intro"><div><span className="eyebrow">03 / Desktop atmosphere</span><h1 className="display-title">A view worth<br /><em>coming back to.</em></h1></div><p className="lede">Small curated collections for your big screen. Pick a mood, browse the pack, and save the ones that feel like yours.</p></header>
+    <div className="section-head"><div><span className="eyebrow">Browse by mood</span><h2>Where to today?</h2></div><a className="text-link" href={patreon} target="_blank" rel="noreferrer">Support the solo dev ↗</a></div>
+    <div className="wallpaper-categories">{CATEGORIES.map((item) => <button key={item.name} className="category-card" style={{ "--category-art": item.art } as React.CSSProperties} onClick={() => setCategory(category === item.name ? "All" : item.name)} aria-pressed={category === item.name}><small>{item.number} / COLLECTION</small><strong>{item.name}</strong></button>)}</div>
+    <div className="control-row" style={{ marginBottom: 18 }}><button className={`chip ${category === "All" ? "active" : ""}`} onClick={() => setCategory("All")}>All collections</button>{category !== "All" && <span className="eyebrow">{category} selected</span>}</div>
+    {packsLoading && <div className="wallpaper-empty" aria-live="polite">Preparing the collections…</div>}
+    {!packsLoading && packs.length === 0 && <div className="wallpaper-empty"><strong>The first collections are on their way.</strong>The visual browsing experience is ready for the catalog. No wallpaper files are fetched or downloaded from this frontend.</div>}
+    {!packsLoading && packs.length > 0 && shown.length === 0 && <div className="wallpaper-empty"><strong>No {category} collections yet.</strong>Try another mood or browse all collections.</div>}
+    {shown.length > 0 && <div className="wallpaper-grid">{shown.map((pack) => <button key={pack.id} className="wallpaper-pack" onClick={() => { setImages([]); setImagesLoading(true); setSelected(pack); }} aria-label={`Open ${pack.name} collection`}>
+      {pack.cover_url ? <Image src={pack.cover_url} alt={`${pack.name} wallpaper collection cover`} width={1200} height={900} unoptimized /> : <div style={{ aspectRatio: "4 / 3", background: CATEGORIES.find((c) => pack.tags?.some((t) => t.toLowerCase() === c.name.toLowerCase()))?.art ?? CATEGORIES[1].art }} />}
+      <span className="wallpaper-pack-info"><strong>{pack.name}</strong><small>{pack.resolution || "Desktop wallpapers"} · {pack.count} images</small></span>
+    </button>)}</div>}
+    {!supabaseConfigured && <p className="notice-line">Collection cards are wired for the future catalog; this frontend does not download artwork.</p>}
+    {selected && <div className="modal-backdrop" role="presentation" onClick={() => setSelected(null)}><section className="wallpaper-modal" role="dialog" aria-modal="true" aria-labelledby="wallpaper-title" onClick={(event) => event.stopPropagation()}>
+      <div className="modal-head"><div><button className="text-link" onClick={() => setSelected(null)} style={{ display: "inline-flex", gap: 6, marginBottom: 12 }}><ArrowLeft size={14} /> Back to collections</button><h2 id="wallpaper-title">{selected.name}</h2><span className="modal-license">{selected.resolution || "Desktop wallpapers"} · {selected.count} images · {selected.license} license</span></div><button className="chip" aria-label="Close collection" onClick={() => setSelected(null)}><X size={17} /></button></div>
+      {imagesLoading ? <div className="wallpaper-empty">Loading the collection…</div> : images.length > 0 ? <div className="preview-grid">{images.map((wallpaper, index) => <a key={wallpaper.id} className="preview-image" href={wallpaper.image_url} download={`taured-${selected.slug}-${index + 1}`}><Image src={wallpaper.image_url} alt={`${selected.name} wallpaper ${index + 1}`} width={900} height={900} unoptimized /><span className="text-link" style={{ display: "inline-flex", gap: 5, marginTop: 8 }}><ArrowDown size={13} /> Download image</span></a>)}</div> : <div className="wallpaper-empty"><strong>Preview images are being prepared.</strong>This pack doesn’t have individual previews available yet.</div>}
+      <div className="modal-actions">{selected.zip_url ? <a className="pill-action" href={selected.zip_url} download><DownloadSimple size={17} /> Download full pack <ArrowUpRight size={15} /></a> : <button className="pill-action" type="button" disabled title="Full pack not available yet"><DownloadSimple size={17} /> Full pack coming soon</button>}<span className="modal-license">Free to download · {selected.license}</span><a className="text-link" href={patreon} target="_blank" rel="noreferrer">Support the solo dev ↗</a></div>
+    </section></div>}
+  </div>;
 }
