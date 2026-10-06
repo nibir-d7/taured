@@ -1,0 +1,57 @@
+name: Build Windows toolbox
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "cli/taured-win/**"
+      - ".github/workflows/windows-toolbox.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile
+        shell: pwsh
+        run: |
+          Set-Location cli/taured-win
+          ./Compile.ps1
+
+      - name: Commit payload
+        shell: pwsh
+        run: |
+          Set-Location cli/taured-win
+          git add taured.ps1
+          git diff --staged --quiet
+          if ($LASTEXITCODE -ne 0) {
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "chore(cli): rebuild windows payload"
+            git push
+          }
+
+      - name: Upload payload
+        uses: actions/upload-artifact@v4
+        with:
+          name: taured-ps1
+          path: cli/taured-win/taured.ps1
+
+  release:
+    needs: build
+    runs-on: windows-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: taured-ps1
+          path: cli/taured-win
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: cli/taured-win/taured.ps1

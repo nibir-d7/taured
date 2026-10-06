@@ -12,7 +12,7 @@ export type App = {
   linux_pacman: string | null;
   linux_flatpak: string | null;
   linux_snap: string | null;
-  homepage: string | null;
+  homepage?: string | null;
 };
 
 export type Template = {

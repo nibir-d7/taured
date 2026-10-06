@@ -2,7 +2,6 @@
 System.Management.Automation.dll
 Microsoft.PowerShell.ConsoleHost.dll
 taured.exe.config
-taured.ps1
 binary/
 testResults.xml
 

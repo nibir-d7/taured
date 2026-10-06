@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
+import { bundledApps, bundledTemplates } from "@/lib/catalog";
 import type { App, Template } from "@/lib/types";
 import { buildWindowsScript } from "@/lib/scripts/windows";
 import { buildLinuxScript } from "@/lib/scripts/linux";
@@ -11,18 +12,43 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 
+const initialSelection = (): Set<string> => {
+  if (typeof window === "undefined") return new Set();
+  const fromUrl = new URLSearchParams(window.location.search).get("apps");
+  return new Set(fromUrl ? fromUrl.split(",").filter(Boolean) : []);
+};
+
+const initialOs = (): "windows" | "linux" => {
+  if (typeof window === "undefined") return "windows";
+  return new URLSearchParams(window.location.search).get("os") === "linux" ? "linux" : "windows";
+};
+
 export default function AppsClient() {
-  const [apps, setApps] = useState<App[]>([]);
-  const [templates, setTemplates] = useState<Template[]>([]);
+  const [apps, setApps] = useState<App[]>(() => (supabaseConfigured ? [] : bundledApps));
+  const [templates, setTemplates] = useState<Template[]>(() => (supabaseConfigured ? [] : bundledTemplates));
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [os, setOs] = useState<"windows" | "linux">("windows");
+  const [selected, setSelected] = useState<Set<string>>(initialSelection);
+  const [os, setOs] = useState<"windows" | "linux">(initialOs);
 
   useEffect(() => {
-    if (!supabaseConfigured) return;
-    supabase.from("apps").select("*").order("name").then(({ data }) => { setApps(data ?? []); setLoading(false); });
-    supabase.from("templates").select("*").then(({ data }) => setTemplates(data ?? []));
+    if (!supabaseConfigured) {
+      const frame = requestAnimationFrame(() => setLoading(false));
+      return () => cancelAnimationFrame(frame);
+    }
+
+    let cancelled = false;
+    Promise.all([
+      supabase.from("apps").select("*").order("name"),
+      supabase.from("templates").select("*"),
+    ]).then(([appsResult, templatesResult]) => {
+      if (cancelled) return;
+      setApps(appsResult.data?.length ? appsResult.data : bundledApps);
+      setTemplates(templatesResult.data?.length ? templatesResult.data : bundledTemplates);
+      setLoading(false);
+    });
+
+    return () => { cancelled = true; };
   }, []);
 
   const filtered = useMemo(() => {
@@ -36,6 +62,17 @@ export default function AppsClient() {
       ? buildWindowsScript(selectedApps)
       : buildLinuxScript(selectedApps)
     : "";
+
+  useEffect(() => {
+    if (loading || typeof window === "undefined") return;
+    const params = new URLSearchParams();
+    if (selected.size) params.set("apps", [...selected].join(","));
+    params.set("os", os);
+    const next = params.toString();
+    window.history.replaceState(null, "", next ? `?${next}` : window.location.pathname);
+  }, [selected, os, loading]);
+
+  const shareLink = typeof window === "undefined" ? "" : `${window.location.origin}/apps?apps=${[...selected].join(",")}&os=${os}`;
 
   const toggle = (id: string) =>
     setSelected((s) => {
@@ -52,8 +89,8 @@ export default function AppsClient() {
       </section>
 
       {!supabaseConfigured && (
-        <p className="rounded border border-dashed p-3 text-sm text-muted-foreground">
-          Supabase not configured yet — set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in .env.local.
+        <p className="rounded-full border border-dashed px-4 py-1.5 text-xs text-muted-foreground">
+          Showing the bundled catalog — live updates connect automatically when the API is configured.
         </p>
       )}
 
@@ -95,8 +132,9 @@ export default function AppsClient() {
       {script && (
         <div className="flex w-full flex-col gap-3 rounded-3xl border bg-white p-6 text-left shadow-sm dark:bg-neutral-900">
           <Textarea readOnly rows={14} className="bg-neutral-50 font-mono text-xs dark:bg-neutral-950" value={script} />
-          <div className="flex gap-2">
-            <Button onClick={() => navigator.clipboard.writeText(script)}>Copy</Button>
+          <div className="flex justify-center gap-2">
+            <Button className="rounded-full" onClick={() => navigator.clipboard.writeText(script)}>Copy script</Button>
+            <Button variant="outline" className="rounded-full" onClick={() => navigator.clipboard.writeText(shareLink)}>Copy share link</Button>
             <Button
               variant="outline"
               onClick={() => {

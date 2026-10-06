@@ -13,6 +13,39 @@ param (
     [switch]$Offline
 )
 
+$TAURED_RELEASE_URL = "https://github.com/nibir-d7/taured/releases/latest/download/taured.ps1"
+$TAURED_RAW_URL = "https://raw.githubusercontent.com/nibir-d7/taured/master/cli/taured-win/taured.ps1"
+
+$tauredSourceText = if ($PSCommandPath) { Get-Content $PSCommandPath -Raw } else { $MyInvocation.MyCommand.Definition }
+$tauredCompiledMarker = ('function Initialize-' + 'WPFUI')
+$tauredIsCompiled = $tauredSourceText -match $tauredCompiledMarker
+
+if (-not $tauredIsCompiled) {
+    Write-Host "taured: fetching the Windows toolbox..."
+    $tauredPayload = $null
+    foreach ($tauredCandidate in @($TAURED_RELEASE_URL, $TAURED_RAW_URL)) {
+        try {
+            $tauredPayload = (Invoke-WebRequest -UseBasicParsing -Uri $tauredCandidate -TimeoutSec 60).Content
+            break
+        } catch {
+            Write-Host "taured: could not download from $tauredCandidate"
+        }
+    }
+    if (-not $tauredPayload) {
+        Write-Host "taured: download failed. Get the toolbox manually from https://github.com/nibir-d7/taured" -ForegroundColor Red
+        $global:LASTEXITCODE = 1
+        return 1
+    }
+    Write-Host "taured: downloaded. Launching..."
+    $tauredBlock = [ScriptBlock]::Create($tauredPayload)
+    $tauredArgs = @{}
+    if ($Config) { $tauredArgs["Config"] = $Config }
+    if ($Preset) { $tauredArgs["Preset"] = $Preset }
+    if ($Offline) { $tauredArgs["Offline"] = $true }
+    & $tauredBlock @tauredArgs
+    return
+}
+
 function Test-tauredOwnsFileProcess {
     <#
         .SYNOPSIS
@@ -169,7 +202,15 @@ if (`$launch.Headless) { `$env:taured_HEADLESS_CHILD = '1' }
 if (`$launch.ScriptPath) {
     & `$launch.ScriptPath @invokeParameters
 } else {
-    `$remoteScript = [ScriptBlock]::Create((Invoke-RestMethod 'https://github.com/nibir-d7/taured/releases/latest/download/taured.ps1'))
+    `$tauredPayload = `$null
+    foreach (`$tauredCandidate in @('https://github.com/nibir-d7/taured/releases/latest/download/taured.ps1', 'https://raw.githubusercontent.com/nibir-d7/taured/master/cli/taured-win/taured.ps1')) {
+        try {
+            `$tauredPayload = (Invoke-WebRequest -UseBasicParsing -Uri `$tauredCandidate -TimeoutSec 60).Content
+            break
+        } catch { }
+    }
+    if (-not `$tauredPayload) { throw 'taured: could not download the Windows toolbox' }
+    `$remoteScript = [ScriptBlock]::Create(`$tauredPayload)
     & `$remoteScript @invokeParameters
 }
 "@

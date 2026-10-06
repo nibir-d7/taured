@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import type { Pack } from "@/lib/types";
 import { Button } from "@/components/ui/button";
-import { Heart, X } from "@phosphor-icons/react";
+import { Heart, X, Image as ImageIcon } from "@phosphor-icons/react";
 
 const FILTERS = ["All", "Nature", "Abstract", "Minimal", "Geometric", "Dark", "Pastel"];
 type Wallpaper = { id: string; image_url: string };
@@ -51,13 +51,16 @@ export default function WallpapersClient() {
         ))}
       </div>
 
-      {!supabaseConfigured && (
-        <p className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground">Supabase not configured — add env vars and seed packs.</p>
-      )}
-
-      {packsLoading && <p className="text-sm text-muted-foreground">Loading packs…</p>}
-      {!packsLoading && packs.length === 0 && supabaseConfigured && (
-        <p className="text-sm text-muted-foreground">No packs yet — add some from /admin.</p>
+      {!packsLoading && packs.length === 0 && (
+        <div className="flex w-full max-w-xl flex-col items-center gap-3 rounded-3xl border bg-white p-10 text-center shadow-sm dark:bg-neutral-900">
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#fbdcf0] text-rose-500 dark:bg-[#3f2737]">
+            <ImageIcon size={26} weight="duotone" />
+          </span>
+          <h2 className="text-lg font-semibold">Packs are being prepared</h2>
+          <p className="max-w-sm text-sm text-muted-foreground">
+            Every pack is CC0 and hand-curated. New collections appear here as soon as they are rendered and uploaded.
+          </p>
+        </div>
       )}
 
       <div className="grid w-full grid-cols-2 gap-4 md:grid-cols-4">
