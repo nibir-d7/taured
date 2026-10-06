@@ -3841,16 +3841,6 @@ $sync.configs.feature = @'
     "InvokeScript": [],
     "link": "https://winutil.christitus.com/code-reference/features/features/dotnet"
   },
-  "WPFFixesNTPPool": {
-    "Content": "NTP Server - Enable",
-    "Description": "Replaces the default Windows NTP server (time.windows.com) with pool.ntp.org for improved time synchronization accuracy and reliability.",
-    "category": "Fixes",
-    "panel": "1",
-    "Type": "Button",
-    "ButtonWidth": "300",
-    "function": "Invoke-WPFFixesNTPPool",
-    "link": "https://winutil.christitus.com/code-reference/features/fixes/ntppool"
-  },
   "WPFFeatureshyperv": {
     "Content": "Hyper-V - Enable",
     "Description": "Hyper-V is a hardware virtualization product developed by Microsoft that allows users to create and manage virtual machines.",
@@ -3913,7 +3903,7 @@ $sync.configs.feature = @'
     "panel": "1",
     "feature": [],
     "InvokeScript": [
-      "\r\n      New-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Configuration Manager' -Name 'EnablePeriodicBackup' -Type DWord -Value 1 -Force\r\n      New-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Configuration Manager' -Name 'BackupCount' -Type DWord -Value 2 -Force\r\n      $action = New-ScheduledTaskAction -Execute 'schtasks' -Argument '/run /i /tn \"\\Microsoft\\Windows\\Registry\\RegIdleBackup\"'\r\n      $trigger = New-ScheduledTaskTrigger -Daily -At 00:30\r\n      Register-ScheduledTask -Action $action -Trigger $trigger -TaskName 'AutoRegBackup' -Description 'Create System Registry Backups' -User 'System'\r\n      "
+      "       New-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Configuration Manager' -Name 'EnablePeriodicBackup' -Type DWord -Value 1 -Force       New-ItemProperty -Path 'HKLM:\\SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Configuration Manager' -Name 'BackupCount' -Type DWord -Value 2 -Force       $action = New-ScheduledTaskAction -Execute 'schtasks' -Argument '/run /i /tn \"\\Microsoft\\Windows\\Registry\\RegIdleBackup\"'       $trigger = New-ScheduledTaskTrigger -Daily -At 00:30       Register-ScheduledTask -Action $action -Trigger $trigger -TaskName 'AutoRegBackup' -Description 'Create System Registry Backups' -User 'System'       "
     ],
     "link": "https://winutil.christitus.com/code-reference/features/features/regbackup"
   },
@@ -3948,60 +3938,6 @@ $sync.configs.feature = @'
       "Containers-DisposableClientVM"
     ],
     "link": "https://winutil.christitus.com/code-reference/features/features/sandbox"
-  },
-  "WPFFeatureInstall": {
-    "Content": "Install Features",
-    "category": "Features",
-    "panel": "1",
-    "Type": "Button",
-    "ButtonWidth": "300",
-    "function": "Invoke-WPFFeatureInstall",
-    "link": "https://winutil.christitus.com/code-reference/features/features/install"
-  },
-  "WPFPanelAutologin": {
-    "Content": "AutoLogon - Run",
-    "category": "Fixes",
-    "panel": "1",
-    "Type": "Button",
-    "ButtonWidth": "300",
-    "function": "Invoke-WPFPanelAutologin",
-    "link": "https://winutil.christitus.com/code-reference/features/fixes/autologin"
-  },
-  "WPFFixesUpdate": {
-    "Content": "Windows Update - Reset",
-    "category": "Fixes",
-    "panel": "1",
-    "Type": "Button",
-    "ButtonWidth": "300",
-    "function": "Invoke-WPFFixesUpdate",
-    "link": "https://winutil.christitus.com/code-reference/features/fixes/update"
-  },
-  "WPFFixesNetwork": {
-    "Content": "Network - Reset",
-    "category": "Fixes",
-    "panel": "1",
-    "Type": "Button",
-    "ButtonWidth": "300",
-    "function": "Invoke-WPFFixesNetwork",
-    "link": "https://winutil.christitus.com/code-reference/features/fixes/network"
-  },
-  "WPFPanelDISM": {
-    "Content": "System Corruption Scan - Run",
-    "category": "Fixes",
-    "panel": "1",
-    "Type": "Button",
-    "ButtonWidth": "300",
-    "function": "Invoke-WPFSystemRepair",
-    "link": "https://winutil.christitus.com/code-reference/features/fixes/dism"
-  },
-  "WPFFixesWinget": {
-    "Content": "WinGet - Reinstall",
-    "category": "Fixes",
-    "panel": "1",
-    "Type": "Button",
-    "ButtonWidth": "300",
-    "function": "Invoke-WPFFixesWinget",
-    "link": "https://winutil.christitus.com/code-reference/features/fixes/winget"
   },
   "WPFPanelComputer": {
     "Content": "Computer Management",
@@ -4156,33 +4092,6 @@ $sync.configs.feature = @'
       "rstrui.exe"
     ],
     "link": "https://winutil.christitus.com/code-reference/features/legacy-windows-panels/restore"
-  },
-  "WPFtauredInstallPSProfile": {
-    "Content": "CTT PowerShell Profile - Install",
-    "category": "Powershell Profile Powershell 7+ Only",
-    "panel": "2",
-    "Type": "Button",
-    "ButtonWidth": "300",
-    "function": "Invoke-tauredInstallPSProfile",
-    "link": "https://winutil.christitus.com/code-reference/features/powershell-profile-powershell-7--only/installpsprofile"
-  },
-  "WPFtauredUninstallPSProfile": {
-    "Content": "CTT PowerShell Profile - Remove",
-    "category": "Powershell Profile Powershell 7+ Only",
-    "panel": "2",
-    "Type": "Button",
-    "ButtonWidth": "300",
-    "function": "Invoke-tauredUninstallPSProfile",
-    "link": "https://winutil.christitus.com/code-reference/features/powershell-profile-powershell-7--only/uninstallpsprofile"
-  },
-  "WPFtauredSSHServer": {
-    "Content": "OpenSSH Server - Enable",
-    "category": "Remote Access",
-    "panel": "2",
-    "Type": "Button",
-    "ButtonWidth": "300",
-    "function": "Invoke-WPFSSHServer",
-    "link": "https://winutil.christitus.com/code-reference/features/remote-access/sshserver"
   }
 }
 '@ | ConvertFrom-Json
