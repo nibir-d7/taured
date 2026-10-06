@@ -1,7 +1,7 @@
 function Invoke-tauredUninstallPSProfile {
     <#
     .SYNOPSIS
-        Restores the PowerShell 7 profile the CTT profile replaced
+        Restores the PowerShell 7 profile that was replaced during setup
 
     .DESCRIPTION
         The profile path has to come from pwsh itself. $PROFILE inside this job is the worker's
@@ -10,7 +10,7 @@ function Invoke-tauredUninstallPSProfile {
 
     $pwshPath = Get-tauredPowerShell7Path
     if (-not $pwshPath) {
-        throw "PowerShell 7 is not installed, so there is no CTT profile to remove."
+        throw "PowerShell 7 is not installed, so there is no profile to remove."
     }
 
     $profilePath = (& $pwshPath -NoProfile -NonInteractive -Command '$PROFILE' | Select-Object -First 1)
@@ -28,7 +28,7 @@ function Invoke-tauredUninstallPSProfile {
 
     if (Test-Path $profilePath) {
         Remove-Item -Path $profilePath -Force
-        Write-tauredLog -Component "Feature" -Message "Removed the CTT PowerShell profile: $profilePath"
+        Write-tauredLog -Component "Feature" -Message "Removed the installed PowerShell profile: $profilePath"
         return
     }
 

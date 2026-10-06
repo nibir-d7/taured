@@ -4,7 +4,7 @@
 . ../../common-service-script.sh
 
 install_dwm_titus() {
-    printf "%b\n" "${YELLOW}Installing DWM-Titus...${RC}"
+    printf "%b\n" "${YELLOW}Installing DWM...${RC}"
     
     DWM_DIR="$HOME/.local/share/dwm-titus"
     
@@ -13,29 +13,29 @@ install_dwm_titus() {
     
     # Clone or update dwm-titus repository
     if [ ! -d "$DWM_DIR" ]; then
-        printf "%b\n" "${YELLOW}Cloning dwm-titus repository...${RC}"
+        printf "%b\n" "${YELLOW}Downloading window manager source...${RC}"
         git clone https://github.com/ChrisTitusTech/dwm-titus.git "$DWM_DIR" || {
-            printf "%b\n" "${RED}Failed to clone dwm-titus${RC}"
+            printf "%b\n" "${RED}Failed to download window manager source${RC}"
             return 1
         }
     else
-        printf "%b\n" "${YELLOW}Updating dwm-titus repository...${RC}"
+        printf "%b\n" "${YELLOW}Updating window manager source...${RC}"
         if cd "$DWM_DIR" && git pull; then
             :
         else
-            printf "%b\n" "${RED}Failed to update dwm-titus${RC}"
+            printf "%b\n" "${RED}Failed to update window manager source${RC}"
             return 1
         fi
     fi
     
     # Run the upstream install script
-    printf "%b\n" "${YELLOW}Running dwm-titus installer...${RC}"
+    printf "%b\n" "${YELLOW}Running window manager installer...${RC}"
     bash "$DWM_DIR/install.sh" || {
-        printf "%b\n" "${RED}dwm-titus installation failed${RC}"
+        printf "%b\n" "${RED}Window manager installation failed${RC}"
         return 1
     }
     
-    printf "%b\n" "${GREEN}DWM-Titus installation complete${RC}"
+    printf "%b\n" "${GREEN}DWM installation complete${RC}"
 }
 
 checkEnv

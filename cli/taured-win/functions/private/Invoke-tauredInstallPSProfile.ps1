@@ -14,7 +14,7 @@ function Get-tauredPowerShell7Path {
 function Invoke-tauredInstallPSProfile {
     <#
     .SYNOPSIS
-        Installs the CTT PowerShell profile
+        Installs the curated PowerShell profile
 
     .DESCRIPTION
         The profile targets PowerShell 7, so its setup script has to run under pwsh rather than
@@ -64,5 +64,5 @@ function Invoke-tauredInstallPSProfile {
         throw "The profile setup script reported $failures error(s); see the log."
     }
 
-    Write-tauredLog -Component "Feature" -Message "CTT PowerShell profile installed. Open a new PowerShell 7 session to use it."
+    Write-tauredLog -Component "Feature" -Message "PowerShell profile installed. Open a new PowerShell 7 session to use it."
 }

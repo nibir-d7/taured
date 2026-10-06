@@ -34,4 +34,15 @@ export type Pack = {
   resolution: string | null;
   license: string;
   zip_url: string | null;
+  created_at?: string;
+};
+
+export type Wallpaper = {
+  id: string;
+  pack_id: string;
+  image_url: string;
+  width?: number | null;
+  height?: number | null;
+  size_kb?: number | null;
+  created_at?: string;
 };

@@ -1,5 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, DesktopTower, SlidersHorizontal, SquaresFour } from "@phosphor-icons/react/dist/ssr";
+import { ArrowUpRight, DesktopTower, SlidersHorizontal, SquaresFour } from "@phosphor-icons/react";
+import AdminClient from "./admin/admin-client";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -10,6 +14,18 @@ const jsonLd = {
 };
 
 export default function Home() {
+  const [isAdminSubdomain, setIsAdminSubdomain] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hostname.startsWith("admin.")) {
+      setIsAdminSubdomain(true);
+    }
+  }, []);
+
+  if (isAdminSubdomain) {
+    return <AdminClient />;
+  }
+
   return (
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />

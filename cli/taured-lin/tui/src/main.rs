@@ -15,7 +15,7 @@ use taured_core::get_tabs;
 
 use app::App;
 
-const ABOUT: &str = "taured - distro-agnostic Linux toolbox. Free and open source. Based on LinUtil by Chris Titus Tech.";
+const ABOUT: &str = "taured - distro-agnostic Linux toolbox. Free and open source.";
 
 struct Options {
     help: bool,
@@ -105,10 +105,7 @@ fn run(mut app: App) -> io::Result<()> {
     result
 }
 
-fn event_loop(
-    terminal: &mut Terminal<CrosstermBackend<Stdout>>,
-    app: &mut App,
-) -> io::Result<()> {
+fn event_loop(terminal: &mut Terminal<CrosstermBackend<Stdout>>, app: &mut App) -> io::Result<()> {
     loop {
         terminal.draw(|frame| ui::draw(frame, app))?;
 
@@ -123,25 +120,78 @@ fn event_loop(
             continue;
         }
 
+        if app.show_help {
+            if matches!(key.code, KeyCode::Esc | KeyCode::Char('?')) {
+                app.show_help = false;
+            }
+            continue;
+        }
+        if app.show_description {
+            if matches!(key.code, KeyCode::Esc | KeyCode::Char('d')) {
+                app.show_description = false;
+            }
+            continue;
+        }
+        if app.show_confirmation {
+            match key.code {
+                KeyCode::Char('y') | KeyCode::Char('Y') | KeyCode::Enter => {
+                    app.show_confirmation = false;
+                    let scripts = app.selected_commands();
+                    leave_screen(terminal)?;
+                    exec::run(&scripts);
+                    enter_screen(terminal)?;
+                    app.message = "Run complete. Press enter to run the selection again.".into();
+                }
+                KeyCode::Char('n') | KeyCode::Char('N') | KeyCode::Esc => {
+                    app.show_confirmation = false;
+                }
+                _ => {}
+            }
+            continue;
+        }
+
+        if app.searching {
+            match key.code {
+                KeyCode::Esc => app.searching = false,
+                KeyCode::Enter => app.searching = false,
+                KeyCode::Backspace => {
+                    let mut query = app.search.clone();
+                    query.pop();
+                    app.update_search(query);
+                }
+                KeyCode::Char(value) if !key.modifiers.contains(KeyModifiers::CONTROL) => {
+                    let mut query = app.search.clone();
+                    query.push(value);
+                    app.update_search(query);
+                }
+                _ => {}
+            }
+            continue;
+        }
+
         match key.code {
             KeyCode::Char('q') | KeyCode::Esc => app.should_quit = true,
-            KeyCode::Char('c') if key.modifiers.contains(KeyModifiers::CONTROL) => app.should_quit = true,
+            KeyCode::Char('c') if key.modifiers.contains(KeyModifiers::CONTROL) => {
+                app.should_quit = true
+            }
             KeyCode::Up | KeyCode::Char('k') => app.move_cursor(-1),
             KeyCode::Down | KeyCode::Char('j') => app.move_cursor(1),
             KeyCode::Char(' ') => app.toggle(),
             KeyCode::Char('a') => app.toggle_all(),
             KeyCode::Char('c') => app.clear(),
             KeyCode::Char('?') => app.show_help = !app.show_help,
+            KeyCode::Char('/') => app.searching = true,
+            KeyCode::Char('d') => app.show_description = true,
+            KeyCode::Backspace => app.go_up(),
             KeyCode::Tab | KeyCode::Right => app.next_tab(),
             KeyCode::BackTab | KeyCode::Left => app.previous_tab(),
             KeyCode::Enter => {
-                let scripts = app.selected_commands();
-                if scripts.is_empty() {
+                if app.open_current_directory() {
+                    app.message.clear();
+                } else if app.selected.is_empty() {
                     app.message = "Nothing selected. Use space to pick items.".into();
                 } else {
-                    leave_screen(terminal)?;
-                    exec::run(&scripts);
-                    enter_screen(terminal)?;
+                    app.show_confirmation = true;
                 }
             }
             _ => {}

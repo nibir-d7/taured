@@ -38,4 +38,3 @@ setupAlacrittyConfig() {
 
 checkEnv
 installAlacritty
-setupAlacrittyConfig

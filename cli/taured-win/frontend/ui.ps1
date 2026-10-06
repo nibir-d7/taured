@@ -28,16 +28,39 @@ function Get-tauredPalette {
 
     if ($Light) {
         return @{
-            Background = "#FFFFFF"; Panel = "#F7F7F8"; Border = "#E4E4E7"
-            Foreground = "#18181B"; Muted = "#71717A"; Accent = "#BE123C"
-            AccentHover = "#E11D48"; Selected = "#FCE7EF"
+            Background = "#141B1E"; Panel = "#232A2D"; Border = "#343D40"
+            Foreground = "#DADADA"; Muted = "#B3B9B8"; Accent = "#8CCF7E"
+            AccentHover = "#A0DC91"; Selected = "#29372E"
         }
     }
 
     return @{
-        Background = "#16181A"; Panel = "#1D2023"; Border = "#2A2E33"
-        Foreground = "#F4F4F5"; Muted = "#8B8B92"; Accent = "#E11D48"
-        AccentHover = "#FB7185"; Selected = "#2A1B21"
+        Background = "#141B1E"; Panel = "#232A2D"; Border = "#343D40"
+        Foreground = "#DADADA"; Muted = "#B3B9B8"; Accent = "#8CCF7E"
+        AccentHover = "#A0DC91"; Selected = "#29372E"
+    }
+}
+
+$script:tauredIconBase64 = '#{tauredIconBase64}'
+
+function Get-tauredBrandImage {
+    if ([string]::IsNullOrWhiteSpace($script:tauredIconBase64) -or $script:tauredIconBase64 -eq '#{tauredIconBase64}') {
+        return $null
+    }
+
+    $bytes = [Convert]::FromBase64String($script:tauredIconBase64)
+    $stream = [System.IO.MemoryStream]::new($bytes)
+    try {
+        $image = [System.Windows.Media.Imaging.BitmapImage]::new()
+        $image.BeginInit()
+        $image.CacheOption = [System.Windows.Media.Imaging.BitmapCacheOption]::OnLoad
+        $image.StreamSource = $stream
+        $image.EndInit()
+        $image.Freeze()
+        return $image
+    }
+    finally {
+        $stream.Dispose()
     }
 }
 
@@ -78,7 +101,7 @@ function New-tauredButton {
 
     if ($Primary) {
         $button.Background = [System.Windows.Media.BrushConverter]::new().ConvertFromString($Palette.Accent)
-        $button.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#FFF1F2")
+        $button.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString($Palette.Background)
         $button.BorderThickness = [System.Windows.Thickness]::new(0)
     } else {
         $button.Background = [System.Windows.Media.BrushConverter]::new().ConvertFromString($Palette.Panel)
@@ -127,7 +150,7 @@ function New-tauredInterface {
     }
 
     $window = New-Object System.Windows.Window
-    $window.Title = "taured"
+    $window.Title = "Taured - Windows Utility"
     $window.Width = 1180
     $window.Height = 760
     $window.MinWidth = 940
@@ -138,6 +161,7 @@ function New-tauredInterface {
     $window.WindowStyle = "None"
     $window.AllowsTransparency = $true
     $window.Background = [System.Windows.Media.Brushes]::Transparent
+    $window.Icon = Get-tauredBrandImage
 
     $shell = New-Object System.Windows.Controls.Grid
     $shell.Background = [System.Windows.Media.BrushConverter]::new().ConvertFromString($Palette.Background)
@@ -155,16 +179,17 @@ function New-tauredInterface {
     $brand = New-Object System.Windows.Controls.StackPanel
     $brand.Orientation = "Horizontal"
     $brand.VerticalAlignment = "Center"
-    $mark = New-Object System.Windows.Shapes.Ellipse
-    $mark.Width = 26
-    $mark.Height = 26
-    $mark.Margin = New-Object System.Windows.Thickness(0, 0, 12, 0)
-    $mark.Fill = [System.Windows.Media.BrushConverter]::new().ConvertFromString($Palette.Accent)
+    $mark = New-Object System.Windows.Controls.Image
+    $mark.Width = 30
+    $mark.Height = 30
+    $mark.Margin = New-Object System.Windows.Thickness(0, 0, 10, 0)
+    $mark.Source = Get-tauredBrandImage
+    $mark.Stretch = [System.Windows.Media.Stretch]::Uniform
     $brand.Children.Add($mark) | Out-Null
     $titleStack = New-Object System.Windows.Controls.StackPanel
     $titleStack.VerticalAlignment = "Center"
-    $titleStack.Children.Add((New-tauredTextBlock -Text "taured" -Color $Palette.Accent -Size 20 -Bold)) | Out-Null
-    $titleStack.Children.Add((New-tauredTextBlock -Text "windows toolbox" -Color $Palette.Muted -Size 11)) | Out-Null
+    $titleStack.Children.Add((New-tauredTextBlock -Text "Taured" -Color $Palette.Accent -Size 20 -Bold)) | Out-Null
+    $titleStack.Children.Add((New-tauredTextBlock -Text "Windows Utility" -Color $Palette.Muted -Size 11)) | Out-Null
     $brand.Children.Add($titleStack) | Out-Null
     $header.Children.Add($brand) | Out-Null
 
@@ -226,14 +251,16 @@ function New-tauredInterface {
     $footer = New-Object System.Windows.Controls.Grid
     $footer.Margin = New-Object System.Windows.Thickness(24, 0, 24, 8)
     $footer.ColumnDefinitions.Add((New-tauredColumn -Star))
-    $footer.ColumnDefinitions.Add((New-tauredColumn -Width 1))
-    $credit = New-tauredTextBlock -Text "based on WinUtil by Chris Titus Tech" -Color $Palette.Muted -Size 11
-    $credit.VerticalAlignment = "Center"
-    $footer.Children.Add($credit) | Out-Null
+    $footer.ColumnDefinitions.Add((New-tauredColumn -Star))
     $status = New-tauredTextBlock -Text "Ready" -Color $Palette.Muted -Size 11
     $status.VerticalAlignment = "Center"
-    [System.Windows.Controls.Grid]::SetColumn($status, 1) | Out-Null
+    [System.Windows.Controls.Grid]::SetColumn($status, 0) | Out-Null
     $footer.Children.Add($status) | Out-Null
+    $credit = New-tauredTextBlock -Text "Inspired by Chris Titus Tech" -Color $Palette.Muted -Size 11
+    $credit.VerticalAlignment = "Center"
+    $credit.HorizontalAlignment = "Right"
+    [System.Windows.Controls.Grid]::SetColumn($credit, 1) | Out-Null
+    $footer.Children.Add($credit) | Out-Null
     [System.Windows.Controls.Grid]::SetRow($footer, 3) | Out-Null
     $shell.Children.Add($footer) | Out-Null
     $ui.Rows["status"] = $status

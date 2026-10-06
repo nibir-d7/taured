@@ -62,6 +62,3 @@ linkNeovimConfig() {
 
 checkEnv
 installNeovim
-cloneNeovim
-backupNeovimConfig
-linkNeovimConfig

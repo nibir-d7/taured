@@ -185,9 +185,9 @@ task_list = "I FI"
 
 [[data.entries]]
 name = "Neovim"
-description = "Neovim is a refactor, and sometimes redactor, in the tradition of Vim.\nIt is not a rewrite but a continuation and extension of Vim.\nThis command configures neovim from CTT's neovim configuration.\nhttps://github.com/ChrisTitusTech/neovim"
+description = "Neovim is a refactor, and sometimes redactor, in the tradition of Vim. This command installs Neovim and common development tools."
 script = "developer-tools/neovim.sh"
-task_list = "I FM"
+task_list = "I"
 
 [[data.entries]]
 name = "Ngrok"
@@ -347,7 +347,7 @@ task_list = "I"
 
 [[data]]
 name = "Alacritty"
-description = "Alacritty is a modern terminal emulator that comes with sensible defaults, but allows for extensive configuration. By integrating with other applications, rather than reimplementing their functionality, it manages to provide a flexible set of features with high performance. The supported platforms currently consist of BSD, Linux, macOS and Windows. This command installs and configures alacritty terminal emulator."
+description = "Alacritty is a modern, GPU-accelerated terminal emulator. This command installs Alacritty without modifying your personal configuration."
 script = "alacritty-setup.sh"
 task_list = "I FM"
 
@@ -356,12 +356,6 @@ name = "Android Debloater"
 description = "Universal Android Debloater (UAD) is a tool designed to help users remove bloatware and unnecessary pre-installed applications from Android devices, enhancing performance and user experience."
 script = "android-debloat.sh"
 task_list = "I"
-
-[[data]]
-name = "Bash Prompt"
-description = "The .bashrc file is a script that runs every time a new terminal session is started in Unix-like operating systems. It is used to configure the shell session, set up aliases, define functions, and more, making the terminal easier to use and more powerful. This command configures the key sections and functionalities defined in the .bashrc file from CTT's mybash repository. https://github.com/ChrisTitusTech/mybash"
-script = "mybash-setup.sh"
-task_list = "I FM"
 
 [[data]]
 name = "Dank Shell"
@@ -377,7 +371,7 @@ task_list = "I SS"
 
 [[data]]
 name = "Fastfetch"
-description = "Fastfetch is a neofetch-like tool for fetching system information and displaying it prettily. It is written mainly in C, with performance and customizability in mind. This command installs fastfetch and configures from CTT's mybash repository. https://github.com/ChrisTitusTech/mybash"
+description = "Fastfetch is a tool for displaying system information. This command installs Fastfetch without replacing your configuration."
 script = "fastfetch-setup.sh"
 task_list = "I FM"
 
@@ -395,13 +389,13 @@ task_list = "I FM"
 
 [[data]]
 name = "Grub Theme"
-description = "Installs ChrisTitusTech's Top 5 Bootloader Themes script to allow for easy customization of GRUB."
+description = "Installs a selection of bootloader themes for easy customization of GRUB."
 script = "grub-theme.sh"
 task_list = "PFM"
 
 [[data]]
 name = "Kitty"
-description = "kitty is a free and open-source GPU-accelerated terminal emulator for Linux, macOS, and some BSD distributions, focused on performance and features. kitty is written in a mix of C and Python programming languages. This command installs and configures kitty."
+description = "Kitty is a free and open-source GPU-accelerated terminal emulator. This command installs Kitty without modifying your personal configuration."
 script = "kitty-setup.sh"
 task_list = "I FM"
 
@@ -446,7 +440,7 @@ task_list = "I SS"
 
 [[data]]
 name = "Rofi"
-description = "Rofi is a window switcher, run dialog, ssh-launcher and dmenu replacement that started as a clone of simpleswitcher, written by Sean Pringle and later expanded by Dave Davenport. This command installs and configures rofi with configuration from CTT's DWM repo. https://github.com/ChrisTitusTech/dwm-titus"
+description = "Rofi is a window switcher, run dialog, SSH launcher, and dmenu replacement. This command installs and applies a curated configuration."
 script = "rofi-setup.sh"
 task_list = "I FM"
 

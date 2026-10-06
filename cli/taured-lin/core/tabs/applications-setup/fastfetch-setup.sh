@@ -92,5 +92,4 @@ setupFastfetchShell() {
 
 checkEnv
 installFastfetch
-setupFastfetchConfig
 setupFastfetchShell

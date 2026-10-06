@@ -26,6 +26,10 @@ Get-ChildItem (Join-Path $root "config") | ForEach-Object {
 
 $script += Get-Content -Path (Join-Path $root "scripts\main.ps1") -Raw
 
+$iconPath = Join-Path $root "..\..\src\app\icon.png"
+$iconBase64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes($iconPath))
+$script = $script.Replace('#{tauredIconBase64}', $iconBase64)
+
 Set-Content -Path (Join-Path $root "taured.ps1") -Value $script
 
 if ($SelfTest) {

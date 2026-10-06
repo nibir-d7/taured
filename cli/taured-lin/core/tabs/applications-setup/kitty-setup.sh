@@ -36,4 +36,3 @@ setupKittyConfig() {
 
 checkEnv
 installKitty
-setupKittyConfig

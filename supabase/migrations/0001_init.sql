@@ -60,12 +60,12 @@ create policy "public read" on templates for select using (true);
 create policy "public read" on packs for select using (true);
 create policy "public read" on wallpapers for select using (true);
 
--- Replace with your admin email. Only that user (logged in via Supabase Auth) can write.
-create policy "admin write" on categories for all using ((auth.jwt() ->> 'email') = 'admin@example.com') with check ((auth.jwt() ->> 'email') = 'admin@example.com');
-create policy "admin write" on apps for all using ((auth.jwt() ->> 'email') = 'admin@example.com') with check ((auth.jwt() ->> 'email') = 'admin@example.com');
-create policy "admin write" on templates for all using ((auth.jwt() ->> 'email') = 'admin@example.com') with check ((auth.jwt() ->> 'email') = 'admin@example.com');
-create policy "admin write" on packs for all using ((auth.jwt() ->> 'email') = 'admin@example.com') with check ((auth.jwt() ->> 'email') = 'admin@example.com');
-create policy "admin write" on wallpapers for all using ((auth.jwt() ->> 'email') = 'admin@example.com') with check ((auth.jwt() ->> 'email') = 'admin@example.com');
+-- Authenticated users (admin signed in via Supabase Auth) can write.
+create policy "admin write" on categories for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+create policy "admin write" on apps for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+create policy "admin write" on templates for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+create policy "admin write" on packs for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+create policy "admin write" on wallpapers for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
 
 insert into storage.buckets (id, name, public) values ('wallpapers', 'wallpapers', true) on conflict do nothing;
 
@@ -78,7 +78,7 @@ create table admin_audit_log (
   changed_at timestamptz default now()
 );
 alter table admin_audit_log enable row level security;
-create policy "admin read audit" on admin_audit_log for select using ((auth.jwt() ->> 'email') = 'admin@example.com');
+create policy "admin read audit" on admin_audit_log for select using (auth.role() = 'authenticated');
 
 create or replace function audit_write() returns trigger language plpgsql security definer as $$
 begin
@@ -93,4 +93,4 @@ create trigger audit_wallpapers after insert or update or delete on wallpapers f
 create trigger audit_templates after insert or update or delete on templates for each row execute function audit_write();
 
 create policy "public read wallpapers bucket" on storage.objects for select using (bucket_id = 'wallpapers');
-create policy "admin write wallpapers bucket" on storage.objects for all using (bucket_id = 'wallpapers' and (auth.jwt() ->> 'email') = 'admin@example.com') with check (bucket_id = 'wallpapers' and (auth.jwt() ->> 'email') = 'admin@example.com');
+create policy "admin write wallpapers bucket" on storage.objects for all using (bucket_id = 'wallpapers' and auth.role() = 'authenticated') with check (bucket_id = 'wallpapers' and auth.role() = 'authenticated');

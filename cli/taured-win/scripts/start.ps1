@@ -2,7 +2,7 @@
 .NOTES
     taured          : https://taured.space
     GitHub          : https://github.com/nibir-d7/taured
-    Based on WinUtil : Chris Titus Tech (https://github.com/ChrisTitusTech/winutil)
+    Inspired by Chris Titus Tech
     Version         : #{replaceme}
 #>
 

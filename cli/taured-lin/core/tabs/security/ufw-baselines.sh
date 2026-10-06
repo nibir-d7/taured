@@ -25,7 +25,7 @@ installPkg() {
 }
 
 configureUFW() {
-    printf "%b\n" "${YELLOW}Using Chris Titus Recommended Firewall Rules${RC}"
+    printf "%b\n" "${YELLOW}Applying recommended firewall rules${RC}"
 
     printf "%b\n" "${YELLOW}Disabling UFW${RC}"
     "$ESCALATION_TOOL" ufw disable

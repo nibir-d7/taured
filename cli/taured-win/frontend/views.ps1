@@ -324,7 +324,6 @@ function Add-tauredConfigView {
     $aboutStack = New-Object System.Windows.Controls.StackPanel
     $aboutStack.Children.Add((New-tauredTextBlock -Text "taured" -Color $Ui.Palette.Accent -Size 16 -Bold)) | Out-Null
     $aboutStack.Children.Add((New-tauredTextBlock -Text "Free, open, no login." -Color $Ui.Palette.Muted -Size 12)) | Out-Null
-    $aboutStack.Children.Add((New-tauredTextBlock -Text "based on WinUtil by Chris Titus Tech" -Color $Ui.Palette.Muted -Size 11)) | Out-Null
     $about.Child = $aboutStack
     $Content.Children.Add($about) | Out-Null
     [System.Windows.Controls.Grid]::SetColumn($about, 1) | Out-Null
