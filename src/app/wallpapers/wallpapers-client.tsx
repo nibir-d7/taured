@@ -11,7 +11,7 @@ type Wallpaper = { id: string; image_url: string };
 
 export default function WallpapersClient() {
   const [packs, setPacks] = useState<Pack[]>([]);
-  const [packsLoading, setPacksLoading] = useState(true);
+  const [packsLoading, setPacksLoading] = useState(supabaseConfigured);
   const [filter, setFilter] = useState("All");
   const [favs, setFavs] = useState<Set<string>>(new Set());
   const [selected, setSelected] = useState<Pack | null>(null);
