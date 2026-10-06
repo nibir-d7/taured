@@ -21,7 +21,6 @@ export default function TweaksClient() {
   const copy = async () => { await navigator.clipboard.writeText(command); setCopied(true); window.setTimeout(() => setCopied(false), 2200); };
 
   return <div className="tweaks-focus-page">
-    <div className="tweaks-orbit tweaks-orbit-one" /><div className="tweaks-orbit tweaks-orbit-two" />
     <section className="tweaks-command-card">
       <div className="tweaks-card-top"><span className="eyebrow">02 / System tool</span><span className="tweaks-live"><i /> ready</span></div>
       <div className="tweaks-heading"><TerminalWindow size={28} weight="duotone" /><h1>One command.<br /><em>A better system.</em></h1></div>

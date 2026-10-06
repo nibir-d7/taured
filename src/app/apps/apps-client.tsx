@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { ArrowDown, ArrowUpRight, Check, Copy, DownloadSimple, Briefcase, Camera, ChatCircle, Chats, Code, Cube, Desktop, FileArchive, FilmStrip, GameController, GitBranch, Globe, Image as ImageIcon, NotePencil, PenNib, PlayCircle, VideoCamera, Waveform, Wrench } from "@phosphor-icons/react";
 import { supabase, supabaseConfigured } from "@/lib/supabase";
 import { bundledApps, bundledTemplates } from "@/lib/catalog";
@@ -26,6 +27,39 @@ const extraApps: App[] = [
   ["cura", "UltiMaker Cura", "3D printing slicer", "3D Printing"], ["bambu", "Bambu Studio", "3D printing slicer", "3D Printing"], ["foxit", "Foxit Reader", "PDF reader", "Documents"], ["sumatrapdf", "SumatraPDF", "Lightweight PDF reader", "Documents"], ["qbittorrent", "qBittorrent", "BitTorrent client", "File Sharing"], ["dropbox", "Dropbox", "Online file sync", "Online Storage"], ["googledrive", "Google Drive", "Online file sync", "Online Storage"], ["malwarebytes", "Malwarebytes", "Malware remover", "Security"], ["avast", "Avast", "Free antivirus", "Security"], ["7zip", "7-Zip", "Compression utility", "Compression"], ["winrar", "WinRAR", "File compression tool", "Compression"], ["wireshark", "Wireshark", "Network protocol analyzer", "Utilities"], ["anydesk", "AnyDesk", "Remote desktop", "Utilities"], ["rustdesk", "RustDesk", "Open-source remote desktop", "Utilities"]
 ].map(([id, name, description, category]) => ({ id, name, description, category, icon: id, verified: true, win_winget: null, win_choco: null, linux_apt: null, linux_dnf: null, linux_pacman: null, linux_flatpak: null, linux_snap: null }));
 
+function uniqueApps(candidates: App[]): App[] {
+  const byId = new Map<string, App>();
+
+  for (const candidate of candidates) {
+    const current = byId.get(candidate.id);
+    if (!current) {
+      byId.set(candidate.id, candidate);
+      continue;
+    }
+
+    byId.set(candidate.id, {
+      ...candidate,
+      ...current,
+      description: current.description ?? candidate.description,
+      category: current.category ?? candidate.category,
+      icon: current.icon?.startsWith("http") ? current.icon : candidate.icon ?? current.icon,
+      win_winget: current.win_winget ?? candidate.win_winget,
+      win_choco: current.win_choco ?? candidate.win_choco,
+      linux_apt: current.linux_apt ?? candidate.linux_apt,
+      linux_dnf: current.linux_dnf ?? candidate.linux_dnf,
+      linux_pacman: current.linux_pacman ?? candidate.linux_pacman,
+      linux_flatpak: current.linux_flatpak ?? candidate.linux_flatpak,
+      linux_snap: current.linux_snap ?? candidate.linux_snap,
+      homepage: current.homepage ?? candidate.homepage,
+      verified: current.verified || candidate.verified,
+    });
+  }
+
+  return [...byId.values()];
+}
+
+const fallbackApps = uniqueApps([...bundledApps, ...extraApps]);
+
 const brandSlugs: Record<string, string> = { "vscode": "visualstudiocode", "git": "git", "nodejs": "nodedotjs", "docker": "docker", "python": "python", "google-chrome": "googlechrome", chrome: "googlechrome", brave: "brave", vivaldi: "vivaldi", opera: "opera", edge: "microsoftedge", firefox: "firefox", "firefox-developer": "firefoxbrowser", thunderbird: "thunderbird", signal: "signal", telegram: "telegram", zoom: "zoom", slack: "slack", notion: "notion", obsidian: "obsidian", todoist: "todoist", libreoffice: "libreoffice", figma: "figma", blender: "blender", krita: "krita", inkscape: "inkscape", "davinci-resolve": "davinciresolve", handbrake: "handbrake", postman: "postman", "github-desktop": "github", go: "go", rust: "rust", powershell: "powershell", steam: "steam", discord: "discord", anki: "anki", zotero: "zotero", calibre: "calibre", gimp: "gimp", obs: "obsstudio", audacity: "audacity", vlc: "vlc" };
 const niniteCategory: Record<string, string> = { browser: "Web Browsers", communication: "Messaging", creator: "Imaging", developer: "Developer Tools", productivity: "Documents", utilities: "Utilities", gaming: "Other", minimal: "Other", student: "Documents" };
 const roleQuestions: Record<string, { label: string; hint: string; ids: string[] }[]> = {
@@ -40,7 +74,8 @@ function AppIcon({ icon, name, id }: { icon: string | null; name: string; id: st
   const props = { size: 22, weight: "duotone" as const };
   const icons: Record<string, React.ReactNode> = { code: <Code {...props} />, "git-branch": <GitBranch {...props} />, docker: <Cube {...props} />, image: <ImageIcon {...props} />, video: <VideoCamera {...props} />, waveform: <Waveform {...props} />, "film-strip": <FilmStrip {...props} />, globe: <Globe {...props} />, "game-controller": <GameController {...props} />, chat: <ChatCircle {...props} />, chats: <Chats {...props} />, "play-circle": <PlayCircle {...props} />, "file-zip": <FileArchive {...props} />, "note-pencil": <NotePencil {...props} />, wrench: <Wrench {...props} />, "video-camera": <VideoCamera {...props} />, briefcase: <Briefcase {...props} />, "pen-nib": <PenNib {...props} /> };
   const slug = brandSlugs[id] ?? brandSlugs[icon ?? ""];
-  return <span className="app-icon">{slug ? <img src={`https://cdn.simpleicons.org/${slug}`} alt="" /> : icons[icon ?? ""] ?? <Desktop {...props} />}<span className="app-icon-fallback">{name.slice(0, 1)}</span></span>;
+  const imageSrc = icon?.startsWith("http") ? icon : slug ? `https://cdn.simpleicons.org/${slug}` : null;
+  return <span className="app-icon">{imageSrc ? <Image src={imageSrc} alt="" loading="lazy" unoptimized width={25} height={25} referrerPolicy="no-referrer" /> : icons[icon ?? ""] ?? <Desktop {...props} />}<span className="app-icon-fallback">{name.slice(0, 1)}</span></span>;
 }
 
 function PresetArt({ id }: { id: string }) {
@@ -52,7 +87,7 @@ function PresetArt({ id }: { id: string }) {
 function CircleNotchedIcon() { return <span className="minimal-mark" aria-hidden="true" />; }
 
 export default function AppsClient() {
-  const [apps, setApps] = useState<App[]>(supabaseConfigured ? [] : [...bundledApps, ...extraApps]);
+  const [apps, setApps] = useState<App[]>(supabaseConfigured ? [] : fallbackApps);
   const [templates, setTemplates] = useState<Template[]>(supabaseConfigured ? [] : bundledTemplates);
   const [loading, setLoading] = useState(supabaseConfigured);
   const [query, setQuery] = useState("");
@@ -72,7 +107,7 @@ export default function AppsClient() {
     let cancelled = false;
     Promise.all([supabase.from("apps").select("*").order("name"), supabase.from("templates").select("*")]).then(([a, t]) => {
       if (cancelled) return;
-      setApps(a.data?.length ? a.data : [...bundledApps, ...extraApps]); setTemplates(t.data?.length ? t.data : bundledTemplates); setLoading(false);
+      setApps(uniqueApps(a.data?.length ? a.data : fallbackApps)); setTemplates(t.data?.length ? t.data : bundledTemplates); setLoading(false);
     }).catch(() => setLoading(false));
     return () => { cancelled = true; window.cancelAnimationFrame(frame); };
   }, []);

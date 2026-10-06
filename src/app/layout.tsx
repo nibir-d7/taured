@@ -39,7 +39,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${syne.variable} h-full antialiased`}
+      className={`dark ${geistSans.variable} ${geistMono.variable} ${syne.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <header className="site-header">
