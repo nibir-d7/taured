@@ -195,8 +195,9 @@ function New-tauredInterface {
 
     $close = New-tauredButton -Text "Close" -Palette $Palette -Width 80
     $close.VerticalAlignment = "Center"
+    $close.Tag = $window
     [System.Windows.Controls.Grid]::SetColumn($close, 1) | Out-Null
-    $close.Add_Click({ $window.Close() })
+    $close.Add_Click({ param($sender, $eventArgs) $sender.Tag.Close() })
     $header.Children.Add($close) | Out-Null
     [System.Windows.Controls.Grid]::SetRow($header, 0) | Out-Null
     $shell.Children.Add($header) | Out-Null
@@ -218,12 +219,19 @@ function New-tauredInterface {
         $tabButton = New-tauredButton -Text $entry.Label -Palette $Palette -Width 172
         $tabButton.HorizontalAlignment = "Left"
         $tabButton.Margin = New-Object System.Windows.Thickness(0, 0, 0, 8)
-        $tabButton.Tag = $entry.Key
+        $tabButton.Tag = @{
+            Tab = $entry.Key
+            Ui = $ui
+            Window = $window
+            Sidebar = $sidebar
+            Content = $content
+        }
         $tabButton.Add_Click({
                 param($sender, $eventArgs)
-                Set-tauredTab -Ui $ui -Tab $sender.Tag
-                Show-tauredTab -Ui $ui -Window $window -Sidebar $sidebar -Content $content
-            }.GetNewClosure())
+                $tabState = $sender.Tag
+                Set-tauredTab -Ui $tabState.Ui -Tab $tabState.Tab
+                Show-tauredTab -Ui $tabState.Ui -Window $tabState.Window -Sidebar $tabState.Sidebar -Content $tabState.Content
+            })
         $sidebar.Children.Add($tabButton) | Out-Null
         $ui.Rows["tab_$($entry.Key)"] = $tabButton
     }
@@ -323,9 +331,11 @@ function New-tauredRunButton {
 
     $palette = $Ui.Palette
     $button = New-tauredButton -Text $Label -Palette $palette -Primary -Width 190
+    $button.Tag = $Ui
     $button.Add_Click({
-            Start-tauredJob -Ui $Ui
-        }.GetNewClosure())
+            param($sender, $eventArgs)
+            Start-tauredJob -Ui $sender.Tag
+        })
     return $button
 }
 
@@ -334,9 +344,11 @@ function New-tauredUndoButton {
 
     $button = New-tauredButton -Text "Undo selected" -Palette $Ui.Palette -Width 150
     $button.Margin = New-Object System.Windows.Thickness(10, 0, 0, 0)
+    $button.Tag = $Ui
     $button.Add_Click({
-            Start-tauredUndoJob -Ui $Ui
-        }.GetNewClosure())
+            param($sender, $eventArgs)
+            Start-tauredUndoJob -Ui $sender.Tag
+        })
     return $button
 }
 
@@ -344,9 +356,11 @@ function New-tauredExportButton {
     param([hashtable]$Ui)
 
     $button = New-tauredButton -Text "Export selection" -Palette $Ui.Palette -Width 170
+    $button.Tag = $Ui
     $button.Add_Click({
-            Export-tauredSelection -Ui $Ui
-        }.GetNewClosure())
+            param($sender, $eventArgs)
+            Export-tauredSelection -Ui $sender.Tag
+        })
     return $button
 }
 
@@ -355,8 +369,10 @@ function New-tauredImportButton {
 
     $button = New-tauredButton -Text "Import selection" -Palette $Ui.Palette -Width 170
     $button.Margin = New-Object System.Windows.Thickness(10, 0, 0, 0)
+    $button.Tag = $Ui
     $button.Add_Click({
-            Import-tauredSelection -Ui $Ui
-        }.GetNewClosure())
+            param($sender, $eventArgs)
+            Import-tauredSelection -Ui $sender.Tag
+        })
     return $button
 }

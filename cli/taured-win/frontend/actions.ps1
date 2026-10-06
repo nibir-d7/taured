@@ -262,7 +262,8 @@ function Show-tauredLog {
     $close = New-tauredButton -Text "Done" -Palette $Ui.Palette -Primary -Width 120
     $close.HorizontalAlignment = "Right"
     $close.Margin = New-Object System.Windows.Thickness(0, 14, 0, 0)
-    $close.Add_Click({ $window.Close() })
+    $close.Tag = $window
+    $close.Add_Click({ param($sender, $eventArgs) $sender.Tag.Close() })
     $stack.Children.Add($close) | Out-Null
 
     $card.Child = $stack

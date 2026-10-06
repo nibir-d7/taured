@@ -15,11 +15,12 @@ function Add-tauredInstallView {
     $search.BorderBrush = [System.Windows.Media.BrushConverter]::new().ConvertFromString($Ui.Palette.Border)
     $search.CaretBrush = [System.Windows.Media.BrushConverter]::new().ConvertFromString($Ui.Palette.Accent)
     $search.VerticalContentAlignment = "Center"
-    $uiScope = $Ui
+    $search.Tag = $Ui
     $search.Add_TextChanged({
             param($sender, $eventArgs)
-            $uiScope.Search = $sender.Text
-            Add-tauredInstallList -Ui $uiScope -List $list
+            $searchUi = $sender.Tag
+            $searchUi.Search = $sender.Text
+            Add-tauredInstallList -Ui $searchUi -List $searchUi.Rows["list"]
         })
     [System.Windows.Controls.Grid]::SetRow($search, 0) | Out-Null
     $left.Children.Add($search) | Out-Null
@@ -65,10 +66,15 @@ function Add-tauredInstallView {
 </DataTemplate>
 "@
     $list.ItemTemplate = [System.Windows.Markup.XamlReader]::Parse($rowTemplate)
-    $uiScope = $Ui
+    $list.Tag = $Ui
     $list.Add_SelectionChanged({
             param($sender, $eventArgs)
-            if ($sender.SelectedItem) { Update-tauredDetail -Ui $uiScope -Entry $sender.SelectedItem }
+            try {
+                if ($sender.SelectedItem) { Update-tauredDetail -Ui $sender.Tag -Entry $sender.SelectedItem }
+            }
+            catch {
+                Write-tauredLog "Could not show app details: $($_.Exception.Message)" "ERROR"
+            }
         })
 
     $Content.Children.Add($left) | Out-Null
@@ -104,6 +110,7 @@ function Add-tauredInstallList {
             Source = $source
             Description = $app.description
             Link = $app.link
+            Kind = "app"
             Selected = [bool]$Ui.SelectedApps[$property.Name]
             Tag = $Ui.Tab
         }
@@ -119,7 +126,7 @@ function Update-tauredDetail {
     $panel.Children.Add((New-tauredTextBlock -Text $Entry.Name -Color $Ui.Palette.Foreground -Size 17 -Bold)) | Out-Null
     $panel.Children.Add((New-tauredTextBlock -Text $Entry.Category -Color $Ui.Palette.Muted -Size 12)) | Out-Null
 
-    $spacer = New-Object System.Windows.Controls.Spacer
+    $spacer = New-Object System.Windows.Controls.Border
     $spacer.Height = 10
     $panel.Children.Add($spacer) | Out-Null
 
@@ -127,21 +134,34 @@ function Update-tauredDetail {
     $description.TextWrapping = [System.Windows.TextWrapping]::Wrap
     $panel.Children.Add($description) | Out-Null
 
-    $spacer2 = New-Object System.Windows.Controls.Spacer
+    $spacer2 = New-Object System.Windows.Controls.Border
     $spacer2.Height = 12
     $panel.Children.Add($spacer2) | Out-Null
 
-    $panel.Children.Add((New-tauredTextBlock -Text "Installed with $($Entry.Source)" -Color $Ui.Palette.Muted -Size 11)) | Out-Null
+    $detailMeta = if ($Entry.Kind -eq "tweak") { "Changes: $($Entry.Source)" } else { "Installed with $($Entry.Source)" }
+    $panel.Children.Add((New-tauredTextBlock -Text $detailMeta -Color $Ui.Palette.Muted -Size 11)) | Out-Null
 
     $toggle = New-Object System.Windows.Controls.CheckBox
-    $toggle.Content = "Include in this run"
+    $isTweak = $Entry.Kind -eq "tweak"
+    $toggle.Content = if ($isTweak) { "Apply this tweak" } else { "Include in this run" }
     $toggle.Margin = New-Object System.Windows.Thickness(0, 14, 0, 0)
-    $toggle.IsChecked = $Ui.SelectedApps[$Entry.Id]
+    $toggle.IsChecked = if ($isTweak) { $Ui.SelectedTweaks[$Entry.Id] } else { $Ui.SelectedApps[$Entry.Id] }
+    $toggle.Tag = @{ Ui = $Ui; EntryId = $Entry.Id; Kind = if ($isTweak) { "tweak" } else { "app" } }
     $toggle.Add_Click({
             param($sender, $eventArgs)
-            $Ui.SelectedApps[$Entry.Id] = [bool]$sender.IsChecked
-            Add-tauredInstallList -Ui $Ui -List $Ui.Rows["list"]
-        }.GetNewClosure())
+            $toggleState = $sender.Tag
+            if ($toggleState.Kind -eq "tweak") {
+                $toggleState.Ui.SelectedTweaks[$toggleState.EntryId] = [bool]$sender.IsChecked
+                foreach ($item in $toggleState.Ui.Rows["tweaksList"].ItemsSource) {
+                    if ($item.Id -eq $toggleState.EntryId) { $item.Selected = [bool]$sender.IsChecked }
+                }
+                $toggleState.Ui.Rows["tweaksList"].Items.Refresh()
+            }
+            else {
+                $toggleState.Ui.SelectedApps[$toggleState.EntryId] = [bool]$sender.IsChecked
+                Add-tauredInstallList -Ui $toggleState.Ui -List $toggleState.Ui.Rows["list"]
+            }
+        })
     $panel.Children.Add($toggle) | Out-Null
 
     if ($Entry.Link) {
@@ -151,9 +171,11 @@ function Update-tauredDetail {
         $link.FontSize = 11.5
         $link.Margin = New-Object System.Windows.Thickness(0, 12, 0, 0)
         $link.TextDecorations = "Underline"
-        $link.MouseLeftButtonUp.Add({
-                Start-Process $Entry.Link
-            }.GetNewClosure())
+        $link.Tag = $Entry.Link
+        $link.Add_MouseLeftButtonUp({
+                param($sender, $eventArgs)
+                Start-Process $sender.Tag
+            })
         $panel.Children.Add($link) | Out-Null
     }
 
@@ -203,19 +225,27 @@ function Add-tauredTweaksView {
 </DataTemplate>
 "@
     $list.ItemTemplate = [System.Windows.Markup.XamlReader]::Parse($rowTemplate)
-    $uiScope = $Ui
+    $list.Tag = $Ui
     $list.Add_SelectionChanged({
             param($sender, $eventArgs)
-            if ($sender.SelectedItem) {
-                $entry = $sender.SelectedItem
-                $tweak = $uiScope.Configs.tweaks.$($entry.Id)
-                Update-tauredDetail -Ui $uiScope -Entry ([pscustomobject]@{
-                        Name        = $entry.Name
-                        Category    = $tweak.category
-                        Description = $tweak.Description
-                        Source      = (Format-tauredTweakSummary -Tweak $tweak)
-                        Link        = $null
-                    })
+            try {
+                if ($sender.SelectedItem) {
+                    $uiScope = $sender.Tag
+                    $entry = $sender.SelectedItem
+                    $tweak = $uiScope.Configs.tweaks.$($entry.Id)
+                    Update-tauredDetail -Ui $uiScope -Entry ([pscustomobject]@{
+                            Id          = $entry.Id
+                            Kind        = "tweak"
+                            Name        = $entry.Name
+                            Category    = $tweak.category
+                            Description = $tweak.Description
+                            Source      = (Format-tauredTweakSummary -Tweak $tweak)
+                            Link        = $null
+                        })
+                }
+            }
+            catch {
+                Write-tauredLog ("Could not show tweak details: " + ($_ | Out-String -Width 240).Trim()) "ERROR"
             }
         })
 
@@ -268,11 +298,14 @@ function Add-tauredUpdatesView {
             $run.HorizontalAlignment = "Left"
             $run.Margin = New-Object System.Windows.Thickness(0, 10, 0, 0)
             $featureId = $property.Name
+            $run.Tag = @{ Ui = $uiScope; FeatureId = $featureId }
             $run.Add_Click({
+                    param($sender, $eventArgs)
+                    $runState = $sender.Tag
                     $log = @((New-tauredRestorePoint))
-                    $log += Invoke-tauredFeature -Feature $uiScope.Configs.feature.$featureId
-                    Show-tauredLog -Ui $uiScope -Lines $log
-                }.GetNewClosure())
+                    $log += Invoke-tauredFeature -Feature $runState.Ui.Configs.feature.$($runState.FeatureId)
+                    Show-tauredLog -Ui $runState.Ui -Lines $log
+                })
             $stack.Children.Add($run) | Out-Null
         }
 
@@ -313,7 +346,7 @@ function Add-tauredConfigView {
     $logButton.Margin = New-Object System.Windows.Thickness(0, 18, 0, 0)
     $logButton.Add_Click({
             Start-Process (Join-Path $env:LOCALAPPDATA "taured\logs")
-        }.GetNewClosure())
+        })
     $panel.Children.Add($logButton) | Out-Null
 
     $Content.Children.Add($panel) | Out-Null
