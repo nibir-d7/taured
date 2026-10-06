@@ -31,6 +31,10 @@ export default function TweaksClient() {
 
   const filtered = useMemo(() => tweaks.filter((t) => t.platform === platform), [platform]);
   const selectedTweaks = tweaks.filter((t) => selected.has(t.id) && t.platform === platform);
+  const oneLiner =
+    platform === "windows"
+      ? "irm https://raw.githubusercontent.com/nibir-d7/taured/master/cli/taured-win/scripts/start.ps1 | iex"
+      : "curl -sL https://raw.githubusercontent.com/nibir-d7/taured/master/cli/taured-lin/start.sh | sh";
 
   const toggle = (id: string) =>
     setSelected((s) => {
@@ -45,6 +49,18 @@ export default function TweaksClient() {
         <h1 className="text-4xl font-bold tracking-tight">Tweak your OS</h1>
         <p className="mt-2 text-sm text-muted-foreground">One CLI command. Safe, reversible. Debloat, privacy, performance.</p>
       </section>
+
+      <div className="flex w-full max-w-2xl flex-col gap-3 rounded-3xl border bg-white p-6 shadow-sm dark:bg-neutral-900">
+        <p className="text-sm font-medium">
+          Run it now
+          {selectedTweaks.length > 0 ? ` — ${selectedTweaks.length} tweak${selectedTweaks.length > 1 ? "s" : ""} preselected below` : ""}
+        </p>
+        <pre className="overflow-x-auto rounded-xl bg-neutral-900 p-4 text-xs text-rose-300">{oneLiner}</pre>
+        <div className="flex justify-center">
+          <Button className="rounded-full" onClick={() => navigator.clipboard.writeText(oneLiner)}>Copy command</Button>
+        </div>
+      </div>
+
       <p className="text-xs text-muted-foreground">
         Create a restore point (Windows) or back up your data (Linux) before running any tweaks.
       </p>
@@ -62,6 +78,8 @@ export default function TweaksClient() {
         }}>Import selection</Button>
       </div>
 
+      <p className="text-xs text-muted-foreground">A preview of what the CLI ships — the full catalog lives inside the toolbox.</p>
+
       <Tabs value={platform} onValueChange={(v) => setPlatform(v as "windows" | "linux")}>
         <TabsList>
           <TabsTrigger value="windows">WinTweak</TabsTrigger>
@@ -72,16 +90,10 @@ export default function TweaksClient() {
       </Tabs>
 
       {selectedTweaks.length > 0 && (
-        <div className="flex flex-col gap-2 rounded-3xl border bg-muted/30 p-6">
-          <p className="text-sm font-medium">Run the taured tweaker with your selection:</p>
-          <pre className="overflow-x-auto rounded-xl bg-neutral-900 p-4 text-xs text-emerald-300">
-{platform === "windows"
-  ? `powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/nibir-d7/taured/master/cli/taured-win/scripts/start.ps1 | iex"`
-  : `curl -sL https://raw.githubusercontent.com/nibir-d7/taured/master/cli/taured-lin/start.sh | bash`}
-          </pre>
-          <Button onClick={() => navigator.clipboard.writeText(platform === "windows" ? `powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/nibir-d7/taured/master/cli/taured-win/scripts/start.ps1 | iex"` : `curl -sL https://raw.githubusercontent.com/nibir-d7/taured/master/cli/taured-lin/start.sh | bash`)}>
-            Copy command
-          </Button>
+        <div className="flex w-full flex-col gap-3 rounded-3xl border bg-white p-6 text-left shadow-sm dark:bg-neutral-900">
+          <p className="text-sm font-medium">Run the taured toolbox — your selection is highlighted inside:</p>
+          <pre className="overflow-x-auto rounded-xl bg-neutral-900 p-4 text-xs text-rose-300">{oneLiner}</pre>
+          <Button className="rounded-full" onClick={() => navigator.clipboard.writeText(oneLiner)}>Copy command</Button>
           <details className="text-xs text-muted-foreground">
             <summary>See what this runs (for transparency)</summary>
             <Textarea readOnly rows={8} className="mt-2 font-mono text-xs" value={buildTweakScript(platform, selectedTweaks)} />

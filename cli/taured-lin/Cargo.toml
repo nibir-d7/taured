@@ -1,11 +1,11 @@
-
 [workspace]
-members = ["core", "tui", "xtask"]
+members = ["core", "tui"]
 default-members = ["tui", "core"]
 resolver = "2"
+
 [workspace.package]
 license = "MIT"
-version = "26.7.17"
+version = "0.1.0"
 edition = "2021"
 
 [profile.release]

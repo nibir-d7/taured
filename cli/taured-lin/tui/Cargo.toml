@@ -1,18 +1,15 @@
 [package]
 name = "taured_tui"
-description = "Chris Titus Tech's Linux Toolbox - taured is a distro-agnostic toolbox designed to simplify everyday Linux tasks."
-documentation = "https://christitustech.github.io/taured"
+description = "taured is a distro-agnostic Linux toolbox for everyday system tasks."
 readme = "../README.md"
 edition = "2021"
 license.workspace = true
-repository = "https://github.com/ChrisTitusTech/taured/tree/main/tui"
+repository = "https://github.com/nibir-d7/taured/tree/main/tui"
 version.workspace = true
 include = [
     "src/*.rs",
     "Cargo.toml",
     "cool_tips.txt",
-    "assets/ctt_logo.png",
-    "../man/taured.1",
 ]
 
 [[bin]]
@@ -25,14 +22,12 @@ tips = ["rand"]
 
 [dependencies]
 clap = { version = "4.6.1", features = ["derive"] }
-image = { version = "0.25.10", default-features = false, features = ["ico", "png"] }
-taured_core = { version = "26.7.17", path = "../core" }
+taured_core = { version = "0.1.0", path = "../core" }
 nix = { version = "0.31.3", features = ["user"] }
 oneshot = { version = "0.2.1", features = ["std"], default-features = false }
 portable-pty = "0.9.0"
 rand = { version = "0.10.1", optional = true }
 ratatui = { version = "0.30.0", features = ["crossterm"], default-features = false }
-ratatui-image = { version = "11.0.5", default-features = false, features = ["crossterm", "image-defaults"] }
 time = { version = "0.3.47", features = ["formatting", "local-offset", "macros"], default-features = false }
 tree-sitter-bash = "0.25.1"
 tree-sitter-highlight = "0.26.9"

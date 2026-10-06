@@ -1,9 +1,9 @@
 <#
 .NOTES
-    Author         : Chris Titus @christitustech
-    Runspace Author: @DeveloperDurp
-    GitHub         : https://github.com/ChrisTitusTech
-    Version        : #{replaceme}
+    taured          : https://taured.space
+    GitHub          : https://github.com/nibir-d7/taured
+    Based on WinUtil : Chris Titus Tech (https://github.com/ChrisTitusTech/winutil)
+    Version         : #{replaceme}
 #>
 
 param (
@@ -169,7 +169,7 @@ if (`$launch.Headless) { `$env:taured_HEADLESS_CHILD = '1' }
 if (`$launch.ScriptPath) {
     & `$launch.ScriptPath @invokeParameters
 } else {
-    `$remoteScript = [ScriptBlock]::Create((Invoke-RestMethod 'https://github.com/ChrisTitusTech/taured/releases/latest/download/taured.ps1'))
+    `$remoteScript = [ScriptBlock]::Create((Invoke-RestMethod 'https://github.com/nibir-d7/taured/releases/latest/download/taured.ps1'))
     & `$remoteScript @invokeParameters
 }
 "@

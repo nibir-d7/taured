@@ -71,7 +71,7 @@
       Get-AppxPackage Microsoft.WidgetsPlatformRuntime -AllUsers | Remove-AppxPackage -AllUsers
       Get-AppxPackage MicrosoftWindows.Client.WebExperience -AllUsers | Remove-AppxPackage -AllUsers
 
-      Invoke-WinUtilExplorerUpdate -action \"restart\"
+      Invoke-tauredExplorerUpdate -action \"restart\"
       Write-Host \"Removed widgets\"
       "
     ],
@@ -827,7 +827,7 @@
   },
   "WPFTweaksRestorePoint": {
     "Content": "Restore Point - Create",
-    "Description": "Creates a restore point at runtime in case a revert is needed from WinUtil modifications.",
+    "Description": "Creates a restore point at runtime in case a revert is needed from taured modifications.",
     "category": "Essential Tweaks",
     "panel": "1",
     "Checked": "False",
@@ -846,7 +846,7 @@
           Enable-ComputerRestore -Drive $Env:SystemDrive
       }
 
-      Checkpoint-Computer -Description \"System Restore Point created by WinUtil\" -RestorePointType MODIFY_SETTINGS
+      Checkpoint-Computer -Description \"System Restore Point created by taured\" -RestorePointType MODIFY_SETTINGS
       Write-Host \"System Restore Point Created Successfully\" -ForegroundColor Green
       "
     ],
@@ -1330,7 +1330,7 @@
     ],
     "InvokeScript": [
       "
-      Invoke-WinUtilExplorerUpdate
+      Invoke-tauredExplorerUpdate
       if ($sync.ThemeButton.Content -eq [char]0xF08C) {
         Invoke-WinutilThemeChange -theme \"Auto\"
       }
@@ -1338,7 +1338,7 @@
     ],
     "UndoScript": [
       "
-      Invoke-WinUtilExplorerUpdate
+      Invoke-tauredExplorerUpdate
       if ($sync.ThemeButton.Content -eq [char]0xF08C) {
         Invoke-WinutilThemeChange -theme \"Auto\"
       }
@@ -1364,12 +1364,12 @@
     ],
     "InvokeScript": [
       "
-      Invoke-WinUtilExplorerUpdate -action \"restart\"
+      Invoke-tauredExplorerUpdate -action \"restart\"
       "
     ],
     "UndoScript": [
       "
-      Invoke-WinUtilExplorerUpdate -action \"restart\"
+      Invoke-tauredExplorerUpdate -action \"restart\"
       "
     ],
     "link": "https://winutil.christitus.com/code-reference/tweaks/customize-preferences/showext"
@@ -1392,12 +1392,12 @@
     ],
     "InvokeScript": [
       "
-      Invoke-WinUtilExplorerUpdate -action \"restart\"
+      Invoke-tauredExplorerUpdate -action \"restart\"
       "
     ],
     "UndoScript": [
       "
-      Invoke-WinUtilExplorerUpdate -action \"restart\"
+      Invoke-tauredExplorerUpdate -action \"restart\"
       "
     ],
     "link": "https://winutil.christitus.com/code-reference/tweaks/customize-preferences/hiddenfiles"
@@ -1737,12 +1737,12 @@
     ],
     "InvokeScript": [
       "
-      Invoke-WinUtilExplorerUpdate -action \"restart\"
+      Invoke-tauredExplorerUpdate -action \"restart\"
       "
     ],
     "UndoScript": [
       "
-      Invoke-WinUtilExplorerUpdate -action \"restart\"
+      Invoke-tauredExplorerUpdate -action \"restart\"
       "
     ],
     "link": "https://winutil.christitus.com/code-reference/tweaks/customize-preferences/startmenurecommendations"
@@ -1783,12 +1783,12 @@
     ],
     "InvokeScript": [
       "
-      Invoke-WinUtilExplorerUpdate -action \"restart\"
+      Invoke-tauredExplorerUpdate -action \"restart\"
       "
     ],
     "UndoScript": [
       "
-      Invoke-WinUtilExplorerUpdate -action \"restart\"
+      Invoke-tauredExplorerUpdate -action \"restart\"
       "
     ],
     "link": "https://winutil.christitus.com/code-reference/tweaks/customize-preferences/taskbaralignment"

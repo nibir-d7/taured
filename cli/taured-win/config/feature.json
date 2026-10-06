@@ -333,25 +333,25 @@
     ],
     "link": "https://winutil.christitus.com/code-reference/features/legacy-windows-panels/restore"
   },
-  "WPFWinUtilInstallPSProfile": {
+  "WPFtauredInstallPSProfile": {
     "Content": "CTT PowerShell Profile - Install",
     "category": "Powershell Profile Powershell 7+ Only",
     "panel": "2",
     "Type": "Button",
     "ButtonWidth": "300",
-    "function": "Invoke-WinUtilInstallPSProfile",
+    "function": "Invoke-tauredInstallPSProfile",
     "link": "https://winutil.christitus.com/code-reference/features/powershell-profile-powershell-7--only/installpsprofile"
   },
-  "WPFWinUtilUninstallPSProfile": {
+  "WPFtauredUninstallPSProfile": {
     "Content": "CTT PowerShell Profile - Remove",
     "category": "Powershell Profile Powershell 7+ Only",
     "panel": "2",
     "Type": "Button",
     "ButtonWidth": "300",
-    "function": "Invoke-WinUtilUninstallPSProfile",
+    "function": "Invoke-tauredUninstallPSProfile",
     "link": "https://winutil.christitus.com/code-reference/features/powershell-profile-powershell-7--only/uninstallpsprofile"
   },
-  "WPFWinUtilSSHServer": {
+  "WPFtauredSSHServer": {
     "Content": "OpenSSH Server - Enable",
     "category": "Remote Access",
     "panel": "2",

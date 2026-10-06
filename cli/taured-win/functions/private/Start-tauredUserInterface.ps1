@@ -421,33 +421,28 @@ function Start-tauredUserInterface {
         Invoke-WPFPopup -Action "Hide" -Popups @("Settings")
 
         $authorInfo = @"
-Author   : <a href="https://github.com/ChrisTitusTech">@ChrisTitusTech</a>
-UI       : <a href="https://github.com/MyDrift-user">@MyDrift-user</a>, <a href="https://github.com/Marterich">@Marterich</a>
-Runspace : <a href="https://github.com/DeveloperDurp">@DeveloperDurp</a>, <a href="https://github.com/Marterich">@Marterich</a>
-GitHub   : <a href="https://github.com/ChrisTitusTech/taured">ChrisTitusTech/taured</a>
-Version  : <a href="https://github.com/ChrisTitusTech/taured/releases/tag/$($sync.version)">$($sync.version)</a>
+taured   : <a href="https://taured.space">taured.space</a>
+GitHub   : <a href="https://github.com/nibir-d7/taured">nibir-d7/taured</a>
+Version  : <a href="https://github.com/nibir-d7/taured/releases/tag/$($sync.version)">$($sync.version)</a>
+Based on : WinUtil by <a href="https://github.com/ChrisTitusTech">Chris Titus Tech</a>
+Credits   : <a href="https://github.com/ChrisTitusTech/winutil">@MyDrift-user</a>, <a href="https://github.com/Marterich">@Marterich</a>, <a href="https://github.com/DeveloperDurp">@DeveloperDurp</a>
 "@
         Show-CustomDialog -Title "About" -Message $authorInfo
     })
     $sync["DocumentationMenuItem"].Add_Click({
         Invoke-WPFPopup -Action "Hide" -Popups @("Settings")
-        Start-Process "https://taured.christitus.com/"
+        Start-Process "https://taured.space/"
     })
     $sync["SponsorMenuItem"].Add_Click({
         Invoke-WPFPopup -Action "Hide" -Popups @("Settings")
 
         $authorInfo = @"
-<a href="https://github.com/sponsors/ChrisTitusTech">Current sponsors for ChrisTitusTech:</a>
+taured is free and open source. If you find it useful, consider supporting the project that inspired it:
+
+<a href="https://github.com/sponsors/ChrisTitusTech">Sponsor WinUtil by Chris Titus Tech</a>
+
+taured issues and contributions: <a href="https://github.com/nibir-d7/taured">nibir-d7/taured</a>
 "@
-        $authorInfo += "`n"
-        try {
-            $sponsors = Invoke-tauredSponsors
-            foreach ($sponsor in $sponsors) {
-                $authorInfo += "<a href=`"https://github.com/sponsors/ChrisTitusTech`">$sponsor</a>`n"
-            }
-        } catch {
-            $authorInfo += "An error occurred while fetching or processing the sponsors: $_`n"
-        }
         Show-CustomDialog -Title "Sponsors" -Message $authorInfo -EnableScroll $true
     })
 

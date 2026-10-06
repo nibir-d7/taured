@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WinUtility"
+        xmlns:local="clr-namespace:taured"
         WindowStartupLocation="CenterScreen"
         UseLayoutRounding="True"
         WindowStyle="SingleBorderWindow"
@@ -11,7 +11,7 @@
         Height="Auto"
         MinWidth="800"
         MinHeight="600"
-        Title="WinUtil">
+        Title="taured">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0" CornerRadius="10" UseAeroCaptionButtons="False"/>
     </WindowChrome.WindowChrome>
@@ -1150,7 +1150,7 @@
                     Margin="0,0,2,0"
                     FontFamily="Segoe MDL2 Assets"
                     Content="N/A"
-                    ToolTip="Change the WinUtil UI Theme"
+                    ToolTip="Change the taured UI Theme"
                     AutomationProperties.Name="Theme"
                 />
                     <Popup Name="ThemePopup"
@@ -1470,7 +1470,7 @@
                                        FontSize="24"
                                        FontWeight="Bold"
                                        Foreground="{DynamicResource MainForegroundColor}"/>
-                            <TextBlock Text="Choose how Windows receives updates. Each profile replaces the Windows Update settings managed by WinUtil."
+                            <TextBlock Text="Choose how Windows receives updates. Each profile replaces the Windows Update settings managed by taured."
                                        Margin="0,6,0,0"
                                        FontSize="13"
                                        TextWrapping="Wrap"
@@ -1537,7 +1537,7 @@
                                                    Foreground="{DynamicResource MainForegroundColor}"/>
                                     </StackPanel>
                                     <StackPanel Grid.Row="1">
-                                        <TextBlock Text="- Removes Windows Update policies applied by WinUtil" TextWrapping="Wrap" Margin="0,0,0,7" Foreground="{DynamicResource MainForegroundColor}"/>
+                                        <TextBlock Text="- Removes Windows Update policies applied by taured" TextWrapping="Wrap" Margin="0,0,0,7" Foreground="{DynamicResource MainForegroundColor}"/>
                                         <TextBlock Text="- Restores update service startup settings" TextWrapping="Wrap" Margin="0,0,0,7" Foreground="{DynamicResource MainForegroundColor}"/>
                                         <TextBlock Text="- Re-enables update scheduled tasks" TextWrapping="Wrap" Margin="0,0,0,12" Foreground="{DynamicResource MainForegroundColor}"/>
                                         <TextBlock Text="Use this to undo the Recommended or Disable profile."
@@ -1595,7 +1595,7 @@
                         </UniformGrid>
 
                         <Border Grid.Row="2" Style="{StaticResource BorderStyle}" Margin="8,14,8,8" Padding="12">
-                            <TextBlock Text="Changes apply system-wide. Restart Windows after switching profiles. Use Restore Defaults to undo WinUtil update policies."
+                            <TextBlock Text="Changes apply system-wide. Restart Windows after switching profiles. Use Restore Defaults to undo taured update policies."
                                        TextWrapping="Wrap"
                                        HorizontalAlignment="Center"
                                        Foreground="{DynamicResource MainForegroundColor}"/>

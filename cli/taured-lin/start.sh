@@ -42,8 +42,8 @@ findArch() {
 
 getUrl() {
     case "${arch}" in
-        x86_64) echo "https://github.com/ChrisTitusTech/taured/releases/latest/download/taured";;
-        *) echo "https://github.com/ChrisTitusTech/taured/releases/latest/download/taured-${arch}";;
+        x86_64) echo "https://github.com/nibir-d7/taured/releases/latest/download/taured";;
+        *) echo "https://github.com/nibir-d7/taured/releases/latest/download/taured-${arch}";;
     esac
 }
 

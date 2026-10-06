@@ -7,10 +7,10 @@ install_extra() {
     "$ESCALATION_TOOL" mkdir -p /usr/share/man/man1
     # -f makes curl exit non-zero on HTTP errors so a 404/5xx body is not written
     # as the manpage; -sSL keeps the curl quiet but shows the error if it fails.
-    curl -fsSL 'https://raw.githubusercontent.com/ChrisTitusTech/taured/refs/heads/main/man/taured.1' | "$ESCALATION_TOOL" tee '/usr/share/man/man1/taured.1' > /dev/null
+    curl -fsSL 'https://raw.githubusercontent.com/nibir-d7/taured/refs/heads/master/man/taured.1' | "$ESCALATION_TOOL" tee '/usr/share/man/man1/taured.1' > /dev/null
     printf "%b\n" "${YELLOW}Creating a Desktop Entry...${RC}"
     "$ESCALATION_TOOL" mkdir -p /usr/share/applications
-    curl -fsSL 'https://raw.githubusercontent.com/ChrisTitusTech/taured/refs/heads/main/taured.desktop' | "$ESCALATION_TOOL" tee /usr/share/applications/taured.desktop > /dev/null
+    curl -fsSL 'https://raw.githubusercontent.com/nibir-d7/taured/refs/heads/master/taured.desktop' | "$ESCALATION_TOOL" tee /usr/share/applications/taured.desktop > /dev/null
     printf "%b\n" "${GREEN}Done.${RC}"
 }
 

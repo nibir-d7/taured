@@ -15,6 +15,8 @@ export default function Home() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <section className="flex flex-col items-center gap-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/taured-logo.png" alt="taured" width={72} height={72} className="h-16 w-16 sm:h-20 sm:w-20" />
         <h1 className="text-4xl font-bold tracking-tight md:text-5xl">What do you want to do?</h1>
         <p className="text-sm text-muted-foreground">
           Free · No login · Open source · <DetectedOs />

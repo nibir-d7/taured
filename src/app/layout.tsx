@@ -20,7 +20,14 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://taured.space"),
   title: { default: "taured.space — Free, safe, open system utilities", template: "%s | taured.space" },
   description: "Cross-platform app installer, safe system tweaker, and CC0 wallpaper packs. Free forever.",
-  openGraph: { title: "taured.space", description: "Free, safe, open system utilities.", url: "https://taured.space", siteName: "taured.space", type: "website" },
+  openGraph: {
+    title: "taured.space",
+    description: "Free, safe, open system utilities.",
+    url: "https://taured.space",
+    siteName: "taured.space",
+    type: "website",
+    images: [{ url: "/taured-logo.png", width: 1024, height: 1024 }],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -32,7 +39,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <header className="border-b">
           <nav className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-            <Link href="/" className="font-mono text-sm font-semibold tracking-tight">taured<span className="text-emerald-600 dark:text-emerald-400">.space</span></Link>
+            <Link href="/" className="flex items-center gap-2 font-mono text-sm font-semibold tracking-tight">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/taured-logo.png" alt="" width={22} height={22} className="h-[22px] w-[22px]" />
+              taured<span className="text-rose-600 dark:text-rose-400">.space</span>
+            </Link>
             <div className="flex gap-5 text-sm text-muted-foreground">
               <Link href="/apps" className="transition hover:text-foreground">Apps</Link>
               <Link href="/tweaks" className="transition hover:text-foreground">Tweaks</Link>
