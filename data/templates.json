@@ -1,0 +1,55 @@
+[
+  {
+    "id": "developer",
+    "name": "Developer",
+    "description": "Core dev tools",
+    "app_ids": [
+      "vscode",
+      "git",
+      "nodejs",
+      "docker",
+      "python"
+    ]
+  },
+  {
+    "id": "creator",
+    "name": "Creator",
+    "description": "Audio/video/image",
+    "app_ids": [
+      "obs",
+      "gimp",
+      "kdenlive",
+      "audacity"
+    ]
+  },
+  {
+    "id": "minimal",
+    "name": "Minimal",
+    "description": "Bare essentials",
+    "app_ids": [
+      "firefox",
+      "git"
+    ]
+  },
+  {
+    "id": "student",
+    "name": "Student",
+    "description": "School & study basics",
+    "app_ids": [
+      "firefox",
+      "zoom",
+      "libreoffice",
+      "slack"
+    ]
+  },
+  {
+    "id": "gamer",
+    "name": "Gamer",
+    "description": "Gaming setup",
+    "app_ids": [
+      "steam",
+      "discord",
+      "vlc"
+    ]
+  }
+]

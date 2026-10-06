@@ -1,0 +1,469 @@
+name = "Applications Setup"
+
+[[data]]
+name = "Communication Apps"
+
+[[data.entries]]
+name = "Discord"
+description = "Discord is a versatile communication platform for gamers and communities, offering voice, video, and text chat features."
+script = "communication-apps/discord-setup.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Jitsi"
+description = "Jitsi Meet is an open-source video conferencing tool that allows users to host and join secure meetings directly from their web browsers without the need for downloads."
+script = "communication-apps/jitsi-setup.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Signal"
+description = "Signal is a privacy-focused messaging app that provides end-to-end encryption for secure text, voice, and video communication."
+script = "communication-apps/signal-setup.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Slack"
+description = "Slack is a collaboration platform designed for team communication, featuring channels, direct messaging, file sharing, and integrations with various productivity tools."
+script = "communication-apps/slack-setup.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Telegram"
+description = "Telegram is a cloud-based messaging app known for its speed and security, offering features like group chats, channels, and end-to-end encrypted calls."
+script = "communication-apps/telegram-setup.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Thunderbird"
+description = "Thunderbird is a free, open-source email client that offers powerful features like customizable email management, a built-in calendar, and extensive add-ons for enhanced functionality."
+script = "communication-apps/thunderbird-setup.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "ZapZap"
+description = "ZapZap is an open source whatsapp desktop client for Linux users developed by rafatosta."
+script = "communication-apps/zapzap-setup.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Zoom"
+description = "Zoom is a widely-used video conferencing platform that allows users to host virtual meetings, webinars, and online collaboration with features like screen sharing and recording."
+script = "communication-apps/zoom-setup.sh"
+task_list = "I"
+
+[[data]]
+name = "Design Tools"
+
+[[data.entries]]
+name = "Ardour"
+description = "Ardour is a free and open-source digital audio workstation and hard disk recorder."
+script = "design-tools/ardour.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Audacity"
+description = "Audacity is a free and open-source digital audio editor and recording application software."
+script = "design-tools/audacity.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Blender"
+description = "Blender is a free and open-source 3D computer graphics software tool set."
+script = "design-tools/blender.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Darktable"
+description = "Darktable is a free and open-source photography application and raw developer."
+script = "design-tools/darktable.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "GNU Image Manipulation Program (GIMP)"
+description = "GIMP is a free and open-source raster graphics editor. It is commonly used for photo retouching, image editing, free-hand drawing, and converting between different image file formats."
+script = "design-tools/gimp.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Handbrake"
+description = "HandBrake is a free and open-source transcoder for digital video files."
+script = "design-tools/handbrake.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Inkscape"
+description = "Inkscape is a free and open-source software vector graphics editor."
+script = "design-tools/inkscape.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Krita"
+description = "Krita is a free and open-source raster graphics editor designed primarily for digital art and 2D animation."
+script = "design-tools/krita.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "MyPaint"
+description = "MyPaint is a free and open-source raster graphics editor for digital painting."
+script = "design-tools/mypaint.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Natron"
+description = "Natron is a powerful, free, and open-source VFX compositing application geared towards digital post-production work."
+script = "design-tools/natron.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "OBS Studio"
+description = "OBS Studio is a free and open-source, cross-platform screencasting and live streaming software application."
+script = "design-tools/obs-studio.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Olive"
+description = "Olive is a free and open-source cross-platform non-linear video editing application."
+script = "design-tools/olive.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "OpenShot"
+description = "OpenShot Video Editor is a free and open-source video editor."
+script = "design-tools/openshot.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Pinta"
+description = "Pinta is an open-source, cross-platform bitmap image drawing and editing program inspired by Paint.NET."
+script = "design-tools/pinta.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Scribus"
+description = "Scribus is free and open-source desktop publishing software available for most desktop operating systems."
+script = "design-tools/scribus.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Synfig Studio"
+description = "Synfig Studio is a free and open-source vector-based 2D animation software."
+script = "design-tools/synfigstudio.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Tenacity"
+description = "Tenacity is an easy-to-use, cross-platform multi-track audio editor/recorder."
+script = "design-tools/tenacity.sh"
+task_list = "I"
+
+[[data]]
+name = "Developer Tools"
+
+[[data.entries]]
+name = "Cursor"
+description = "Next-generation AI-powered code editor built on VS Code, designed for enhanced productivity with integrated AI assistance."
+script = "developer-tools/cursor.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Github Desktop"
+description = "GitHub Desktop is a user-friendly application that simplifies the process of managing Git repositories and interacting with GitHub, providing a graphical interface for tasks like committing, branching, and syncing changes."
+script = "developer-tools/githubdesktop.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "JetBrains Toolbox"
+description = "JetBrains Toolbox is a collection of tools and an app that help developers work with JetBrains products."
+script = "developer-tools/jetbrains-toolbox.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Meld"
+description = "Meld is a visual diff and merge tool that helps compare files, directories, and version-controlled projects."
+script = "developer-tools/meld.sh"
+task_list = "I FI"
+
+[[data.entries]]
+name = "Neovim"
+description = "Neovim is a refactor, and sometimes redactor, in the tradition of Vim.\nIt is not a rewrite but a continuation and extension of Vim.\nThis command configures neovim from CTT's neovim configuration.\nhttps://github.com/ChrisTitusTech/neovim"
+script = "developer-tools/neovim.sh"
+task_list = "I FM"
+
+[[data.entries]]
+name = "Ngrok"
+description = "Ngrok is a tool that creates secure, temporary tunnels to expose local servers to the internet for testing and development."
+script = "developer-tools/ngrok.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Sublime Text"
+description = "Sublime Text is a fast, lightweight, and customizable text editor known for its simplicity, powerful features, and wide range of plugins for various programming languages."
+script = "developer-tools/sublime.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "VS Code"
+description = "Visual Studio Code (VS Code) is a lightweight, open-source code editor with built-in support for debugging, version control, and extensions for various programming languages and frameworks."
+script = "developer-tools/vscode.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "VS Codium"
+description = "VSCodium is a free, open-source version of Visual Studio Code (VS Code) that removes Microsoft-specific telemetry and branding."
+script = "developer-tools/vscodium.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Zed"
+description = "Zed is a next-generation code editor written in rust, designed for high-performance collaboration with humans and AI."
+script = "developer-tools/zed.sh"
+task_list = "I"
+
+[[data]]
+name = "Office Suites"
+
+[[data.entries]]
+name = "FreeOffice"
+script = "office-suites/freeoffice.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "LibreOffice"
+script = "office-suites/libreoffice.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "OnlyOffice"
+script = "office-suites/onlyoffice.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "WPS Office"
+script = "office-suites/wpsoffice.sh"
+task_list = "I"
+
+[[data]]
+name = "PDF Suites"
+
+[[data.entries]]
+name = "Evince"
+script = "pdf-suites/evince.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Okular"
+script = "pdf-suites/okular.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "PDF Studio"
+script = "pdf-suites/pdfstudio.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "PDF Studio Viewer"
+script = "pdf-suites/pdfstudioviewer.sh"
+
+[[data]]
+name = "Web Browsers"
+
+[[data.entries]]
+name = "Brave"
+description = "Brave is a free and open-source web browser developed by Brave Software, Inc. based on the Chromium web browser."
+script = "browsers/brave.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Brave Origin"
+description = "Brave Origin is a minimalist version of Brave that strips out optional features like VPN, crypto wallet, Rewards, and Leo AI, keeping only core privacy protections and ad blocking."
+script = "browsers/brave-origin.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Chromium"
+description = "Chromium is an open-source web browser project started by Google, to provide the source code for the proprietary Google Chrome browser."
+script = "browsers/chromium.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Google Chrome"
+description = "Google Chrome is a fast, secure, and free web browser, built for the modern web."
+script = "browsers/google-chrome.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "LibreWolf"
+description = "LibreWolf is a fork of Firefox, focused on privacy, security, and freedom."
+script = "browsers/librewolf.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Lynx"
+description = "Lynx is a highly configurable text-based web browser for use on cursor-addressable character cell terminals."
+script = "browsers/lynx.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Mozilla Firefox"
+description = "Mozilla Firefox is a free and open-source web browser developed by the Mozilla Foundation."
+script = "browsers/firefox.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Thorium"
+description = "Thorium is a Chromium-based browser focused on privacy and performance."
+script = "browsers/thorium.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Tor Browser"
+description = "Tor Browser is a free and open-source firefox-based web browser designed for anonymity and censorship circumvention."
+script = "browsers/tor-browser.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Vivaldi"
+description = "Vivaldi is a freeware, cross-platform web browser developed by Vivaldi Technologies."
+script = "browsers/vivaldi.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "waterfox"
+description = "Waterfox is the privacy-focused web browser engineered to give you speed, control, and peace of mind on the internet."
+script = "browsers/waterfox.sh"
+task_list = "FI"
+
+[[data.entries]]
+name = "Zen Browser"
+description = "Zen Browser is a privacy-focused web browser designed for enhanced security and a seamless browsing experience."
+script = "browsers/zen-browser.sh"
+task_list = "I"
+
+[[data.entries]]
+name = "Helium Browser"
+description = "Helium Browser is a free, privacy-focused and open-source chromium-based browser designed for enhanced security and a seamless browsing experience."
+script = "browsers/helium-browser.sh"
+task_list = "I"
+
+[[data]]
+name = "Alacritty"
+description = "Alacritty is a modern terminal emulator that comes with sensible defaults, but allows for extensive configuration. By integrating with other applications, rather than reimplementing their functionality, it manages to provide a flexible set of features with high performance. The supported platforms currently consist of BSD, Linux, macOS and Windows. This command installs and configures alacritty terminal emulator."
+script = "alacritty-setup.sh"
+task_list = "I FM"
+
+[[data]]
+name = "Android Debloater"
+description = "Universal Android Debloater (UAD) is a tool designed to help users remove bloatware and unnecessary pre-installed applications from Android devices, enhancing performance and user experience."
+script = "android-debloat.sh"
+task_list = "I"
+
+[[data]]
+name = "Bash Prompt"
+description = "The .bashrc file is a script that runs every time a new terminal session is started in Unix-like operating systems. It is used to configure the shell session, set up aliases, define functions, and more, making the terminal easier to use and more powerful. This command configures the key sections and functionalities defined in the .bashrc file from CTT's mybash repository. https://github.com/ChrisTitusTech/mybash"
+script = "mybash-setup.sh"
+task_list = "I FM"
+
+[[data]]
+name = "Dank Shell"
+description = "DankMaterialShell is a complete desktop shell for niri, Hyprland, MangoWC, Sway, labwc, Scroll, Miracle WM, and other Wayland compositors. It replaces waybar, swaylock, swayidle, mako, fuzzel, polkit, and everything else you'd normally stitch together to make a desktop"
+script = "dank-shell.sh"
+task_list = "I FM"
+
+[[data]]
+name = "Docker"
+description = "Docker is an open platform that uses OS-level virtualization to deliver software in packages called containers."
+script = "docker-setup.sh"
+task_list = "I SS"
+
+[[data]]
+name = "Fastfetch"
+description = "Fastfetch is a neofetch-like tool for fetching system information and displaying it prettily. It is written mainly in C, with performance and customizability in mind. This command installs fastfetch and configures from CTT's mybash repository. https://github.com/ChrisTitusTech/mybash"
+script = "fastfetch-setup.sh"
+task_list = "I FM"
+
+[[data]]
+name = "Flatpak / Flathub"
+description = "Flatpak is a universal application sandbox for Linux that uses isolated packages from Flathub to prevent conflicts and system alterations, while alleviating dependency concerns. This command installs Flatpak and adds the Flathub repository"
+script = "setup-flatpak.sh"
+task_list = "I"
+
+[[data]]
+name = "Ghostty"
+description = "Ghostty is a terminal emulator that has embedded web technologies, allowing for a highly customizable and visually appealing terminal experience."
+script = "ghostty-setup.sh"
+task_list = "I FM"
+
+[[data]]
+name = "Grub Theme"
+description = "Installs ChrisTitusTech's Top 5 Bootloader Themes script to allow for easy customization of GRUB."
+script = "grub-theme.sh"
+task_list = "PFM"
+
+[[data]]
+name = "Kitty"
+description = "kitty is a free and open-source GPU-accelerated terminal emulator for Linux, macOS, and some BSD distributions, focused on performance and features. kitty is written in a mix of C and Python programming languages. This command installs and configures kitty."
+script = "kitty-setup.sh"
+task_list = "I FM"
+
+[[data]]
+name = "taured Installer"
+description = "Installs a distro-specific taured package locally."
+script = "taured-installer.sh"
+task_list = "I"
+
+[[data.preconditions]]
+matches = false
+data = "command_exists"
+values = ["taured"]
+
+[[data]]
+name = "taured Updater"
+description = "Updates your local taured crate installation."
+script = "taured-updater.sh"
+task_list = "I"
+
+[[data.preconditions]]
+matches = true
+data = "command_exists"
+values = ["taured"]
+
+[[data]]
+name = "Noctalia Shell"
+description = "Noctalia is a native Wayland desktop shell for people who want a polished, configurable Linux desktop without stitching together a separate bar, launcher, notification daemon, lock screen, wallpaper tool, and settings UI."
+script = "noctalia-shell.sh"
+task_list = "I FM"
+[[data]]
+name = "Podman"
+description = "Podman is a daemon-less open platform that uses OS-level virtualization to deliver software in packages called containers."
+script = "podman-setup.sh"
+task_list = "I SS"
+
+[[data]]
+name = "Podman-compose"
+description = "Podman Compose is a tool for defining and running multi-container applications using Podman."
+script = "podman-compose-setup.sh"
+task_list = "I SS"
+
+[[data]]
+name = "Rofi"
+description = "Rofi is a window switcher, run dialog, ssh-launcher and dmenu replacement that started as a clone of simpleswitcher, written by Sean Pringle and later expanded by Dave Davenport. This command installs and configures rofi with configuration from CTT's DWM repo. https://github.com/ChrisTitusTech/dwm-titus"
+script = "rofi-setup.sh"
+task_list = "I FM"
+
+[[data]]
+name = "Shelly"
+description = "Shelly is a modern, visual, and intuitive interface for your Arch Linux system. Not just a wrapper, but a native ground-up experience."
+script = "shelly-setup.sh"
+task_list = "I SS"
+
+[[data.preconditions]]
+matches = true
+data = "command_exists"
+values = ["pacman"]
+
+[[data]]
+name = "ZSH Prompt"
+description = "The Z shell is a Unix shell that can be used as an interactive login shell and as a command interpreter for shell scripting. Zsh is an extended Bourne shell with many improvements, including some features of Bash, ksh, and tcsh. This command installs ZSH prompt and provides basic configuration."
+script = "zsh-setup.sh"
+task_list = "I FM"
+

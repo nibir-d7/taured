@@ -1,0 +1,8 @@
+directories = [
+    "taured-tweaks",
+    "applications-setup",
+    "gaming",
+    "security",
+    "system-setup",
+    "utils"
+]

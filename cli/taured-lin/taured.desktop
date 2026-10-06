@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=taured
+Comment=Distro-agnostic toolbox designed to simplify everyday Linux tasks
+Exec=sh -c '/usr/bin/taured || $HOME/.cargo/bin/taured || taured'
+Icon=utilities-terminal
+Type=Application
+Terminal=true
+Categories=Utility;

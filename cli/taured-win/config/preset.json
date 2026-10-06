@@ -1,0 +1,61 @@
+{
+  "Standard": [
+    "WPFTweaksActivity",
+    "WPFTweaksConsumerFeatures",
+    "WPFTweaksDisableExplorerAutoDiscovery",
+    "WPFTweaksWPBT",
+    "WPFTweaksLocation",
+    "WPFTweaksServices",
+    "WPFTweaksTelemetry",
+    "WPFTweaksDeliveryOptimization",
+    "WPFTweaksDiskCleanup",
+    "WPFTweaksDeleteTempFiles",
+    "WPFTweaksEndTaskOnTaskbar",
+    "WPFTweaksRestorePoint"
+  ],
+  "Minimal": [
+    "WPFTweaksConsumerFeatures",
+    "WPFTweaksWPBT",
+    "WPFTweaksServices",
+    "WPFTweaksTelemetry"
+  ],
+  "Advanced": [
+    "WPFTweaksRestorePoint",
+    "WPFTweaksActivity",
+    "WPFTweaksConsumerFeatures",
+    "WPFTweaksDisableExplorerAutoDiscovery",
+    "WPFTweaksWPBT",
+    "WPFTweaksLocation",
+    "WPFTweaksServices",
+    "WPFTweaksTelemetry",
+    "WPFTweaksDeliveryOptimization",
+    "WPFTweaksDeleteTempFiles",
+    "WPFTweaksEndTaskOnTaskbar",
+    "WPFTweaksDisableStoreSearch",
+    "WPFTweaksRevertStartMenu",
+    "WPFTweaksWidget",
+    "WPFTweaksRemoveOneDrive",
+    "WPFTweaksWindowsAI",
+    "WPFTweaksRightClickMenu"
+  ],
+  "AppxDefault": [
+    "WPFAppxMicrosoft_WindowsFeedbackHub",
+    "WPFAppxMicrosoft_GetHelp",
+    "WPFAppxMicrosoft_MicrosoftOfficeHub",
+    "WPFAppxMicrosoft_WindowsCalculator",
+    "WPFAppxClipchamp_Clipchamp",
+    "WPFAppxMicrosoft_WindowsAlarms",
+    "WPFAppxMicrosoftCorporationII_QuickAssist",
+    "WPFAppxMicrosoft_WindowsSoundRecorder",
+    "WPFAppxMicrosoft_MicrosoftStickyNotes",
+    "WPFAppxMicrosoft_Todos",
+    "WPFAppxMicrosoft_MicrosoftSolitaireCollection",
+    "WPFAppxMicrosoft_PowerAutomateDesktop",
+    "WPFAppxMicrosoft_WindowsDevHome",
+    "WPFAppxMicrosoft_BingWeather",
+    "WPFAppxMicrosoft_StartExperiencesApp",
+    "WPFAppxMicrosoft_BingNews",
+    "WPFAppxMicrosoft_Copilot",
+    "WPFAppxMicrosoft_BingSearch"
+  ]
+}

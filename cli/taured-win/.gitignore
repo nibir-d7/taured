@@ -1,0 +1,16 @@
+# taured
+System.Management.Automation.dll
+Microsoft.PowerShell.ConsoleHost.dll
+taured.exe.config
+taured.ps1
+binary/
+testResults.xml
+
+desktop.ini
+.DS_Store
+__pycache__/
+*.pyc
+.venv/
+
+.vscode/
+.idea/

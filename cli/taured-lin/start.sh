@@ -1,0 +1,65 @@
+#!/bin/sh -e
+
+# Prevent execution if this script was only partially downloaded
+{
+rc='\033[0m'
+red='\033[0;31m'
+
+check() {
+    exit_code=$1
+    message=$2
+
+    if [ "$exit_code" -ne 0 ]; then
+        printf '%sERROR: %s%s\n' "$red" "$message" "$rc"
+        exit 1
+    fi
+
+    unset exit_code
+    unset message
+}
+
+SCRIPT_DIR=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
+if [ -f "$SCRIPT_DIR/Cargo.toml" ] && command -v cargo >/dev/null 2>&1; then
+    TARGET_DIR=${CARGO_TARGET_DIR:-"$HOME/.cache/taured/target"}
+    mkdir -p "$TARGET_DIR"
+    check $? "Preparing build cache"
+
+    cd "$SCRIPT_DIR"
+    check $? "Entering taured directory"
+
+    CARGO_TARGET_DIR="$TARGET_DIR" cargo run -p taured_tui --bin taured -- "$@"
+    check $? "Running taured from source"
+    exit 0
+fi
+
+findArch() {
+    case "$(uname -m)" in
+        x86_64|amd64) arch="x86_64" ;;
+        aarch64|arm64) arch="aarch64" ;;
+        *) check 1 "Unsupported architecture"
+    esac
+}
+
+getUrl() {
+    case "${arch}" in
+        x86_64) echo "https://github.com/ChrisTitusTech/taured/releases/latest/download/taured";;
+        *) echo "https://github.com/ChrisTitusTech/taured/releases/latest/download/taured-${arch}";;
+    esac
+}
+
+findArch
+temp_file=$(mktemp)
+check $? "Creating the temporary file"
+
+curl -fsL "$(getUrl)" -o "$temp_file"
+check $? "Downloading taured"
+
+chmod +x "$temp_file"
+check $? "Making taured executable"
+
+"$temp_file" "$@"
+check $? "Executing taured"
+
+rm -f "$temp_file"
+check $? "Deleting the temporary file"
+} # End of wrapping

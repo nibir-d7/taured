@@ -1,0 +1,31 @@
+name = "Taured Tweaks"
+
+[[data]]
+name = "Remove snapd"
+description = "Uninstalls Snap and blocks reinstallation."
+script = "remove-snap.sh"
+task_list = "I"
+
+[[data]]
+name = "Set up Flatpak + Flathub"
+description = "Installs Flatpak and adds the Flathub remote."
+script = "setup-flatpak.sh"
+task_list = "I"
+
+[[data]]
+name = "Install multimedia codecs"
+description = "Adds restricted/extra codecs for video & audio playback."
+script = "install-codecs.sh"
+task_list = "I"
+
+[[data]]
+name = "Fix fractional scaling blur"
+description = "Enables fractional scaling in X11 sessions."
+script = "fractional-scaling.sh"
+task_list = "I"
+
+[[data]]
+name = "Lower swappiness"
+description = "Reduces how aggressively the kernel swaps to disk."
+script = "swappiness.sh"
+task_list = "I"
