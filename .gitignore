@@ -48,3 +48,5 @@ CLAUDE.md
 GEMINI.md
 SPEC.md
 *.log
+
+scripts/preview/

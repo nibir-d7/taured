@@ -34,6 +34,7 @@ if (-not $tauredIsCompiled) {
     if (-not $tauredPayload) {
         Write-Host "taured: download failed. Get the toolbox manually from https://github.com/nibir-d7/taured" -ForegroundColor Red
         $global:LASTEXITCODE = 1
+        if (-not $env:TAURED_NO_PAUSE) { $null = Read-Host "Press Enter to close" }
         return 1
     }
     Write-Host "taured: downloaded. Launching..."
@@ -242,8 +243,12 @@ if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]:
             $elevated = Start-Process $powershellCmd -ArgumentList @("-ExecutionPolicy", "Bypass", "-NoProfile", "-EncodedCommand", $elevationCommand) -Verb RunAs -Wait -PassThru -ErrorAction Stop
         } catch {
             Write-Host "Elevation was declined or failed: $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host "taured needs an Administrator PowerShell window." -ForegroundColor Yellow
             $global:LASTEXITCODE = 1
-            if ($script:tauredIsFileProcess) { exit 1 }
+            if ($script:tauredIsFileProcess) {
+                if (-not $env:TAURED_NO_PAUSE) { $null = Read-Host "Press Enter to close" }
+                exit 1
+            }
             return 1
         }
         $global:LASTEXITCODE = $elevated.ExitCode
@@ -19788,8 +19793,12 @@ Write-Host "Bye bye!" -ForegroundColor Cyan
 Stop-Transcript
 
 if ($uiFailed) {
+    Write-Host "taured exited with errors. The log above and the file at $sync.logPath have the details." -ForegroundColor Yellow
+    if ($script:tauredIsFileProcess) {
+        if (-not $env:TAURED_NO_PAUSE) { $null = Read-Host "Press Enter to close" }
+        exit 1
+    }
     $global:LASTEXITCODE = 1
-    if ($script:tauredIsFileProcess) { exit 1 }
     return 1
 }
 

@@ -9,7 +9,8 @@
     "lint": "eslint",
     "validate:apps": "node scripts/validate-apps.mjs",
     "sync:apps": "node scripts/sync-apps.mjs",
-    "sync:tweak-cli": "node scripts/sync-tweaks-cli.mjs"
+    "sync:tweak-cli": "node scripts/sync-tweaks-cli.mjs",
+    "preview:scripts": "node scripts/render-scripts.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",

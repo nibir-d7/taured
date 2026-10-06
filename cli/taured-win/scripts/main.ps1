@@ -166,7 +166,11 @@ Write-Host "Bye bye!" -ForegroundColor Cyan
 Stop-Transcript
 
 if ($uiFailed) {
+    Write-Host "taured exited with errors. The log above and the file at $sync.logPath have the details." -ForegroundColor Yellow
+    if ($script:tauredIsFileProcess) {
+        if (-not $env:TAURED_NO_PAUSE) { $null = Read-Host "Press Enter to close" }
+        exit 1
+    }
     $global:LASTEXITCODE = 1
-    if ($script:tauredIsFileProcess) { exit 1 }
     return 1
 }
